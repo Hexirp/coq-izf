@@ -18,3 +18,29 @@ Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P 
 Axiom Uniqued : forall (P : SET -> Prop), Unique P -> SET.
 (* Uniquedの性質の公理 *)
 Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
+
+(* 空集合である *)
+Definition IsEmpty (A : SET) := forall x, not (In x A).
+(* 空集合の一意存在性 *)
+Theorem UniqueEmpty : Unique IsEmpty.
+Proof.
+ unfold Unique.
+ split.
+ - (* 空集合の存在性 *)
+  unfold IsEmpty.
+  apply EmptyAx.
+ - (* 空集合の一意性 *)
+  unfold IsEmpty.
+  intros A B H.
+  destruct H as [ H1 H2 ].
+  apply ExtenAx.
+  split.
+  + (* 右への含意 *)
+   intro H.
+   apply H1 in H as Fal.
+   destruct Fal.
+  + (* 左への含意 *)
+   intro H.
+   apply H2 in H as Fal.
+   destruct Fal.
+Qed.
