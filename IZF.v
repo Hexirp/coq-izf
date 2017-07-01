@@ -3,7 +3,9 @@ Axiom SET : Type.
 (* 帰属関係の述語 *)
 Axiom In : SET -> SET -> Prop.
 
-Axiom Sub : SET -> SET -> Prop.
+(* 包含関係 *)
+Definition Sub (A : SET) (B : SET) := forall x, In x A -> In x B.
+
 Axiom succ : SET -> SET.
 
 (* ある述語を満たす集合が一つのみである *)
