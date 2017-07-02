@@ -109,6 +109,30 @@ Definition union2 (A : SET) (B : SET) := union (pair A B).
 
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).
+Definition IsPower (A : SET) (B : SET) := forall x, iff (In x B) (Sub x A).
+Theorem UniquePower : forall (A : SET), Unique (IsPower A).
+Proof.
+ intro A.
+ unfold Unique.
+ split.
+ -
+  unfold IsPower.
+  apply PowerAx.
+ -
+  intros x y H.
+  apply ExtenAx.
+  intro x0.
+  destruct H as [ H1 H2 ].
+  unfold IsPower in H1, H2.
+  apply iff_stepl with (Sub x0 A).
+  +
+   apply iff_sym.
+   apply H2.
+  +
+   apply iff_sym.
+   apply H1.
+Qed.
+Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
 
 (* 後者関数 *)
 Definition succ (A : SET) := union2 A (singleton A).
