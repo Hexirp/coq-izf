@@ -142,7 +142,7 @@ Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
 (* 分出公理 *)
 Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, iff (In x s) (P x /\ In x a).
 
-(* 集合に対する帰納法の公理 *)
+(* 集合に対する帰納法の公理 超限帰納法 *)
 Axiom IndAx : forall (P : SET -> Prop),
  (forall a, (forall x, In x a -> P x) -> P a) -> forall a, P a.
 
@@ -150,3 +150,18 @@ Axiom IndAx : forall (P : SET -> Prop),
 Axiom ColAx : forall (P : SET -> SET -> Prop),
  forall a, (forall x, In x a -> exists y, P x y)
   -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
+
+Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
+Theorem UniqueInf : Unique IsInf.
+Proof.
+ unfold Unique.
+ split.
+ -
+  unfold IsInf.
+  apply InfAx.
+ -
+  intros x y H.
+  apply ExtenAx.
+  apply IndAx.
+  intros a Q.
+  apply Q.
