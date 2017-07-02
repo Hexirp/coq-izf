@@ -141,6 +141,30 @@ Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
 
 (* 分出公理 *)
 Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, iff (In x s) (P x /\ In x a).
+Definition IsSep (P : SET -> Prop) (A : SET) (B : SET) := forall x, iff (In x B) (P x /\ In x A).
+Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
+Proof.
+ intros P A.
+ unfold Unique.
+ split.
+ -
+  unfold IsSep.
+  apply SepAx.
+ -
+  intros x y H.
+  apply ExtenAx.
+  intro x0.
+  destruct H as [H1 H2].
+  unfold IsSep in H1, H2.
+  apply iff_stepl with (P x0 /\ In x0 A).
+  +
+   apply iff_sym.
+   apply H2.
+  +
+   apply iff_sym.
+   apply H1.
+Qed.
+Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
 
 (* 集合に対する帰納法の公理 超限帰納法 *)
 Axiom IndAx : forall (P : SET -> Prop),
@@ -150,18 +174,3 @@ Axiom IndAx : forall (P : SET -> Prop),
 Axiom ColAx : forall (P : SET -> SET -> Prop),
  forall a, (forall x, In x a -> exists y, P x y)
   -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
-
-Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
-Theorem UniqueInf : Unique IsInf.
-Proof.
- unfold Unique.
- split.
- -
-  unfold IsInf.
-  apply InfAx.
- -
-  intros x y H.
-  apply ExtenAx.
-  apply IndAx.
-  intros a Q.
-  apply Q.
