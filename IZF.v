@@ -44,21 +44,21 @@ Proof.
    destruct Fal.
 Qed.
 (* 空集合 *)
-Definition Empty := Uniqued IsEmpty UniqueEmpty.
+Definition empty := Uniqued IsEmpty UniqueEmpty.
 
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
-Axiom Singleton : SET -> SET.
+Axiom singleton : SET -> SET.
 
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
-Axiom Union2 : SET -> SET -> SET.
+Axiom union2 : SET -> SET -> SET.
 
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).
 
 (* 後者関数 *)
-Definition succ (A : SET) := Union2 A (Singleton A).
+Definition succ (A : SET) := union2 A (singleton A).
 (* 無限公理 *)
 Axiom InfAx : exists o,
- In Empty o /\ (forall n, In n o -> In (succ n) o).
+ In empty o /\ (forall n, In n o -> In (succ n) o).
