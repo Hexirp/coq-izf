@@ -29,9 +29,9 @@ Proof.
   unfold IsEmpty.
   apply EmptyAx.
  - (* 空集合の一意性 *)
-  unfold IsEmpty.
   intros A B H.
   destruct H as [ H1 H2 ].
+  unfold IsEmpty in H1, H2.
   apply ExtenAx.
   split.
   + (* 右への含意 *)
@@ -50,7 +50,27 @@ Definition empty := Uniqued IsEmpty UniqueEmpty.
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
 Definition IsPair (A : SET) (B : SET) (C : SET) := forall x, iff (In x C) (x = A \/ x = B).
 Theorem UniquePair : forall (A B : SET), Unique (IsPair A B).
-Admitted.
+Proof.
+ intros A B.
+ unfold Unique.
+ split.
+ -
+  unfold IsPair.
+  apply PairAx.
+ -
+  intros x y H.
+  apply ExtenAx.
+  intro x0.
+  destruct H as [ H1 H2 ].
+  unfold IsPair in H1, H2.
+  apply iff_stepl with (x0 = A \/ x0 = B).
+  +
+   apply iff_sym.
+   apply H2.
+  +
+   apply iff_sym.
+   apply H1.
+Qed.
 Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
 
@@ -62,21 +82,20 @@ Proof.
  intro A.
  unfold Unique.
  split.
- - (* *)
+ -
   unfold IsUnion.
   apply UnionAx.
- - (* *)
+ -
   intros x y H.
   apply ExtenAx.
   intro x0.
   destruct H as [ H1 H2 ].
-  unfold IsUnion in H1.
-  unfold IsUnion in H2.
+  unfold IsUnion in H1, H2.
   apply iff_stepl with (exists u : SET, In u A /\ In u x0).
-  + (* *)
+  +
    apply iff_sym.
    apply H2.
-  + (* *)
+  +
    apply iff_sym.
    apply H1.
 Qed.
