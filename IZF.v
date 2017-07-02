@@ -1,3 +1,8 @@
+(* 以下の文献を参考にした。
+ * http://shirodanuki.cs.shinshu-u.ac.jp/TPP/TPP2013_satou.pdf
+ * https://plato.stanford.edu/entries/set-theory-constructive/axioms-CZF-IZF.html
+ *)
+
 (* 集合の型 *)
 Axiom SET : Type.
 (* 帰属関係の述語 *)
@@ -108,5 +113,16 @@ Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).
 (* 後者関数 *)
 Definition succ (A : SET) := union2 A (singleton A).
 (* 無限公理 *)
-Axiom InfAx : exists o,
- In empty o /\ (forall n, In n o -> In (succ n) o).
+Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
+
+(* 分出公理 *)
+Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, iff (In x s) (P x /\ In x a).
+
+(* 集合に対する帰納法の公理 *)
+Axiom IndAx : forall (P : SET -> Prop),
+ (forall a, (forall x, In x a -> P x) -> P a) -> forall a, P a.
+
+(* 集合公理 *)
+Axiom ColAx : forall (P : SET -> SET -> Prop),
+ forall a, (forall x, In x a -> exists y, P x y)
+  -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
