@@ -6,8 +6,6 @@ Axiom In : SET -> SET -> Prop.
 (* 包含関係 *)
 Definition Sub (A : SET) (B : SET) := forall x, In x A -> In x B.
 
-Axiom succ : SET -> SET.
-
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
 (* Pを満たして一意に存在する集合 *)
@@ -50,10 +48,17 @@ Definition Empty := Uniqued IsEmpty UniqueEmpty.
 
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
+Axiom Singleton : SET -> SET.
+
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
+Axiom Union2 : SET -> SET -> SET.
+
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).
+
+(* 後者関数 *)
+Definition succ (A : SET) := Union2 A (Singleton A).
 (* 無限公理 *)
 Axiom InfAx : exists o,
  In Empty o /\ (forall n, In n o -> In (succ n) o).
