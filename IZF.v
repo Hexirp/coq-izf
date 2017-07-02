@@ -53,7 +53,9 @@ Definition singleton (A : SET) := pair A A.
 
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
-Axiom union : SET -> SET.
+Definition IsUnion (A : SET) (B : SET) := forall x, iff (In x B) (exists u, In u A /\ In u x).
+Axiom UniqueUnion : forall (A : SET), Unique (IsUnion A).
+Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
 
 (* 冪集合公理 *)
