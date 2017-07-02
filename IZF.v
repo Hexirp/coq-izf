@@ -54,7 +54,39 @@ Definition singleton (A : SET) := pair A A.
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
 Definition IsUnion (A : SET) (B : SET) := forall x, iff (In x B) (exists u, In u A /\ In u x).
-Axiom UniqueUnion : forall (A : SET), Unique (IsUnion A).
+Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
+Proof.
+ intro A.
+ unfold Unique.
+ split.
+ - (* *)
+  unfold IsUnion.
+  apply UnionAx.
+ - (* *)
+  intros x y H.
+  destruct H as [ H1 H2 ].
+  apply ExtenAx.
+  intro x0.
+  split.
+  + (* *)
+   intro H.
+   unfold IsUnion in H1.
+   unfold IsUnion in H2.
+   destruct H1 with x0 as [ I1 I2 ].
+   destruct H2 with x0 as [ J1 J2 ].
+   apply J2.
+   apply I1.
+   assumption.
+  + (* *)
+   intro H.
+   unfold IsUnion in H1.
+   unfold IsUnion in H2.
+   destruct H1 with x0 as [ I1 I2 ].
+   destruct H2 with x0 as [ J1 J2 ].
+   apply I2.
+   apply J1.
+   assumption.
+Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
 
