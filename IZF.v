@@ -64,28 +64,18 @@ Proof.
   apply UnionAx.
  - (* *)
   intros x y H.
-  destruct H as [ H1 H2 ].
   apply ExtenAx.
   intro x0.
-  split.
+  destruct H as [ H1 H2 ].
+  unfold IsUnion in H1.
+  unfold IsUnion in H2.
+  apply iff_stepl with (exists u : SET, In u A /\ In u x0).
   + (* *)
-   intro H.
-   unfold IsUnion in H1.
-   unfold IsUnion in H2.
-   destruct H1 with x0 as [ I1 I2 ].
-   destruct H2 with x0 as [ J1 J2 ].
-   apply J2.
-   apply I1.
-   assumption.
+   apply iff_sym.
+   apply H2.
   + (* *)
-   intro H.
-   unfold IsUnion in H1.
-   unfold IsUnion in H2.
-   destruct H1 with x0 as [ I1 I2 ].
-   destruct H2 with x0 as [ J1 J2 ].
-   apply I2.
-   apply J1.
-   assumption.
+   apply iff_sym.
+   apply H1.
 Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
