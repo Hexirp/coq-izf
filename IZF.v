@@ -48,7 +48,10 @@ Definition empty := Uniqued IsEmpty UniqueEmpty.
 
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
-Axiom pair : SET -> SET -> SET.
+Definition IsPair (A : SET) (B : SET) (C : SET) := forall x, iff (In x C) (x = A \/ x = B).
+Theorem UniquePair : forall (A B : SET), Unique (IsPair A B).
+Admitted.
+Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
 
 (* 和集合公理 *)
