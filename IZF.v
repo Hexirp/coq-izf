@@ -49,7 +49,7 @@ Definition empty := Uniqued IsEmpty UniqueEmpty.
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
 Axiom pair : SET -> SET -> SET.
-Axiom singleton : SET -> SET.
+Definition singleton (A : SET) := pair A A.
 
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
