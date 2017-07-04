@@ -9,7 +9,7 @@ Axiom SET : Type.
 Axiom In : SET -> SET -> Prop.
 
 (* 包含関係 *)
-Definition Sub (A : SET) (B : SET) := forall x, In x A -> In x B.
+Definition Sub (A : SET) (B : SET) := forall x, In x B -> In x A.
 
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
@@ -41,12 +41,12 @@ Proof.
   split.
   + (* 右への含意 *)
    intro H.
-   apply H1 in H as Fal.
-   destruct Fal.
+   apply H1 in H as F.
+   destruct F.
   + (* 左への含意 *)
    intro H.
-   apply H2 in H as Fal.
-   destruct Fal.
+   apply H2 in H as F.
+   destruct F.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.
@@ -138,10 +138,12 @@ Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
 Definition succ (A : SET) := union2 A (singleton A).
 (* 無限公理 *)
 Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
+Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
 
 (* 分出公理 *)
 Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, iff (In x s) (P x /\ In x a).
-Definition IsSep (P : SET -> Prop) (A : SET) (B : SET) := forall x, iff (In x B) (P x /\ In x A).
+Definition IsSep (P : SET -> Prop) (A : SET) (B : SET)
+ := forall x, iff (In x B) (P x /\ In x A).
 Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
 Proof.
  intros P A.
@@ -174,3 +176,34 @@ Axiom IndAx : forall (P : SET -> Prop),
 Axiom ColAx : forall (P : SET -> SET -> Prop),
  forall a, (forall x, In x a -> exists y, P x y)
   -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
+
+Theorem sub_refl : forall (A : SET), Sub A A.
+Proof.
+ intro A.
+ unfold Sub.
+ intros x H.
+ apply H.
+Qed.
+
+Theorem sub_exten : forall (A B : SET), Sub A B -> Sub B A -> A = B.
+Proof.
+ intros A B P Q.
+ apply ExtenAx.
+ intro x.
+ split.
+ -
+  unfold Sub in Q.
+  apply Q.
+ -
+  unfold Sub in P.
+  apply P.
+Qed.
+
+Theorem sub_trans : forall (A B C : SET), Sub A B -> Sub B C -> Sub A C.
+Proof.
+ intros A B C P Q.
+ unfold Sub.
+ intros x H.
+ unfold Sub in P, Q.
+ apply P, Q, H.
+Qed.
