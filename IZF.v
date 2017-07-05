@@ -78,6 +78,7 @@ Proof.
 Qed.
 Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
+Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
@@ -212,7 +213,7 @@ Theorem pair_left : forall (A B : SET), In A (pair A B).
 Proof.
  intros A B.
  unfold pair.
- assert (U := UniqueAx (IsPair A B) (UniquePair A B) A).
+ assert (U := PairUx A B A).
  destruct U as [U0 U1].
  apply U1.
  left.
@@ -223,7 +224,7 @@ Theorem pair_right : forall (A B : SET), In B (pair A B).
 Proof.
  intros A B.
  unfold pair.
- assert (U := UniqueAx (IsPair A B) (UniquePair A B) B).
+ assert (U := PairUx A B B).
  destruct U as [U0 U1].
  apply U1.
  right.
@@ -238,7 +239,7 @@ Proof.
  split.
  -
   intro H.
-  assert (U := UniqueAx (IsPair A B) (UniquePair A B) x).
+  assert (U := PairUx A B x).
   destruct U as [U0 U1].
   assert (U2 := U0 H).
   destruct U2.
@@ -250,7 +251,7 @@ Proof.
    apply pair_left.
  -
   intro H.
-  assert (U := UniqueAx (IsPair B A) (UniquePair B A) x).
+  assert (U := PairUx B A x).
   destruct U as [U0 U1].
   assert (U2 := U0 H).
   destruct U2.
