@@ -207,3 +207,57 @@ Proof.
  unfold Sub in P, Q.
  apply P, Q, H.
 Qed.
+
+Theorem pair_left : forall (A B : SET), In A (pair A B).
+Proof.
+ intros A B.
+ unfold pair.
+ assert (U := UniqueAx (IsPair A B) (UniquePair A B) A).
+ destruct U as [U0 U1].
+ apply U1.
+ left.
+ reflexivity.
+Qed.
+
+Theorem pair_right : forall (A B : SET), In B (pair A B).
+Proof.
+ intros A B.
+ unfold pair.
+ assert (U := UniqueAx (IsPair A B) (UniquePair A B) B).
+ destruct U as [U0 U1].
+ apply U1.
+ right.
+ reflexivity.
+Qed.
+
+Theorem pair_sym : forall (A B : SET), pair A B = pair B A.
+Proof.
+ intros A B.
+ apply ExtenAx.
+ intro x.
+ split.
+ -
+  intro H.
+  assert (U := UniqueAx (IsPair A B) (UniquePair A B) x).
+  destruct U as [U0 U1].
+  assert (U2 := U0 H).
+  destruct U2.
+  +
+   rewrite H0.
+   apply pair_right.
+  +
+   rewrite H0.
+   apply pair_left.
+ -
+  intro H.
+  assert (U := UniqueAx (IsPair B A) (UniquePair B A) x).
+  destruct U as [U0 U1].
+  assert (U2 := U0 H).
+  destruct U2.
+  +
+   rewrite H0.
+   apply pair_right.
+  +
+   rewrite H0.
+   apply pair_left.
+Qed.
