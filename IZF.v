@@ -169,11 +169,11 @@ Proof.
 Qed.
 Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
 
-(* 集合に対する帰納法の公理 超限帰納法 *)
+(* 集合に対する帰納法の公理 *)
 Axiom IndAx : forall (P : SET -> Prop),
  (forall a, (forall x, In x a -> P x) -> P a) -> forall a, P a.
 
-(* 集合公理 *)
+(* 収集公理 *)
 Axiom ColAx : forall (P : SET -> SET -> Prop),
  forall a, (forall x, In x a -> exists y, P x y)
   -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
@@ -262,3 +262,14 @@ Proof.
    rewrite H0.
    apply pair_left.
 Qed.
+
+Theorem union_sub : forall (A B : SET), In A B -> Sub A (union B).
+Proof.
+ intros A B H.
+ unfold Sub.
+ intros x I.
+ unfold union in I.
+ assert (U := UniqueAx (IsUnion B) (UniqueUnion B) x).
+ destruct U as [U0 U1].
+ assert (U2 := U0 I).
+ destruct U2.
