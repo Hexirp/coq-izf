@@ -317,21 +317,17 @@ Proof.
   assert (U2 := U0 H).
   destruct U2.
   destruct H0 as [H0 H1].
-  assert (V := PairUx A B x0).
-  destruct V as [V0 V1].
-  assert (V2 := V0 H0).
-  destruct V2.
+  apply union_trans with x0.
   +
-   apply union_trans with x0.
-   *
-    apply H1.
+   apply H1.
+  +
+   assert (V := PairUx A B x0).
+   destruct V as [V0 V1].
+   assert (V2 := V0 H0).
+   destruct V2.
    *
     rewrite H2.
     apply pair_right.
-  +
-   apply union_trans with x0.
-   *
-    apply H1.
    *
     rewrite H2.
     apply pair_left.
@@ -342,21 +338,17 @@ Proof.
   assert (U2 := U0 H).
   destruct U2.
   destruct H0 as [H0 H1].
-  assert (V := PairUx B A x0).
-  destruct V as [V0 V1].
-  assert (V2 := V0 H0).
-  destruct V2.
+  apply union_trans with x0.
   +
-   apply union_trans with x0.
-   *
-    apply H1.
+   apply H1.
+  +
+   assert (V := PairUx B A x0).
+   destruct V as [V0 V1].
+   assert (V2 := V0 H0).
+   destruct V2.
    *
     rewrite H2.
     apply pair_right.
-  +
-   apply union_trans with x0.
-   *
-    apply H1.
    *
     rewrite H2.
     apply pair_left.
