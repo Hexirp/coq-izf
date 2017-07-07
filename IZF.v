@@ -282,3 +282,83 @@ Proof.
   unfold union.
   apply U2.
 Qed.
+
+Theorem union2_left : forall (A B : SET) x, In x A -> In x (union2 A B).
+Proof.
+ intros A B x H.
+ unfold union2.
+ apply union_trans with A.
+ -
+  apply H.
+ -
+  apply pair_left.
+Qed.
+
+Theorem union2_right : forall (A B : SET) x, In x B -> In x (union2 A B).
+Proof.
+ intros A B x H.
+ unfold union2.
+ apply union_trans with B.
+ -
+  apply H.
+ -
+  apply pair_right.
+Qed.
+
+Theorem union2_sym : forall (A B : SET), union2 A B = union2 B A.
+Proof.
+ intros A B.
+ apply ExtenAx.
+ intro x.
+ split.
+ -
+  intro H.
+  assert (U := UniqueAx (IsUnion (pair A B)) (UniqueUnion (pair A B)) x).
+  destruct U as [U0 U1].
+  assert (U2 := U0 H).
+  destruct U2.
+  destruct H0 as [H0 H1].
+  assert (V := PairUx A B x0).
+  destruct V as [V0 V1].
+  assert (V2 := V0 H0).
+  destruct V2.
+  +
+   apply union_trans with x0.
+   *
+    apply H1.
+   *
+    rewrite H2.
+    apply pair_right.
+  +
+   apply union_trans with x0.
+   *
+    apply H1.
+   *
+    rewrite H2.
+    apply pair_left.
+ -
+  intro H.
+  assert (U := UniqueAx (IsUnion (pair B A)) (UniqueUnion (pair B A)) x).
+  destruct U as [U0 U1].
+  assert (U2 := U0 H).
+  destruct U2.
+  destruct H0 as [H0 H1].
+  assert (V := PairUx B A x0).
+  destruct V as [V0 V1].
+  assert (V2 := V0 H0).
+  destruct V2.
+  +
+   apply union_trans with x0.
+   *
+    apply H1.
+   *
+    rewrite H2.
+    apply pair_right.
+  +
+   apply union_trans with x0.
+   *
+    apply H1.
+   *
+    rewrite H2.
+    apply pair_left.
+Qed.
