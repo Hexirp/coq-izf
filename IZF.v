@@ -268,7 +268,6 @@ Proof.
  intros A B C H I.
  assert (U := UniqueAx (IsUnion C) (UniqueUnion C) A).
  destruct U as [U0 U1].
- Print ex_intro.
  assert (exists x, In x C /\ In A x).
  -
   exists B.
