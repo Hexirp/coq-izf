@@ -262,3 +262,23 @@ Proof.
    rewrite H0.
    apply pair_left.
 Qed.
+
+Theorem union_trans : forall (A B C : SET), In A B -> In B C -> In A (union C).
+Proof.
+ intros A B C H I.
+ assert (U := UniqueAx (IsUnion C) (UniqueUnion C) A).
+ destruct U as [U0 U1].
+ Print ex_intro.
+ assert (exists x, In x C /\ In A x).
+ -
+  exists B.
+  split.
+  +
+   apply I.
+  +
+   apply H.
+ -
+  assert (U2 := U1 H0).
+  unfold union.
+  apply U2.
+Qed.
