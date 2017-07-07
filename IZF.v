@@ -1,5 +1,5 @@
 (* 以下の文献を参考にした。
- * http://shirodanuki.cs.shinshu-u.ac.jp/TPP/TPP2013_satou.pdf
+ * http://shirodanuki.cs.shinshu-u.ac.jp/TPP/TPP2013_satou.pdf （間違いが多いので注意）
  * https://plato.stanford.edu/entries/set-theory-constructive/axioms-CZF-IZF.html
  *)
 
@@ -81,8 +81,8 @@ Definition singleton (A : SET) := pair A A.
 Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
 (* 和集合公理 *)
-Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In u x).
-Definition IsUnion (A : SET) (B : SET) := forall x, iff (In x B) (exists u, In u A /\ In u x).
+Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In x u).
+Definition IsUnion (A : SET) (B : SET) := forall x, iff (In x B) (exists u, In u A /\ In x u).
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
 Proof.
  intro A.
@@ -97,7 +97,7 @@ Proof.
   intro x0.
   destruct H as [ H1 H2 ].
   unfold IsUnion in H1, H2.
-  apply iff_stepl with (exists u : SET, In u A /\ In u x0).
+  apply iff_stepl with (exists u : SET, In u A /\ In x0 u).
   +
    apply iff_sym.
    apply H2.
@@ -262,14 +262,3 @@ Proof.
    rewrite H0.
    apply pair_left.
 Qed.
-
-Theorem union_sub : forall (A B : SET), In A B -> Sub A (union B).
-Proof.
- intros A B H.
- unfold Sub.
- intros x I.
- unfold union in I.
- assert (U := UniqueAx (IsUnion B) (UniqueUnion B) x).
- destruct U as [U0 U1].
- assert (U2 := U0 I).
- destruct U2.
