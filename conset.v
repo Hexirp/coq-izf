@@ -31,6 +31,16 @@ Proof.
  apply Q, P, H.
 Qed.
 
+Theorem sub_empty : forall (A : SET), Sub empty A.
+Proof.
+ intros A.
+ unfold Sub.
+ intros x H.
+ assert (NH := UniqueAx IsEmpty UniqueEmpty x).
+ assert (Fal := NH H).
+ destruct Fal.
+Qed.
+
 Theorem pair_left : forall (A B : SET), In A (pair A B).
 Proof.
  intros A B.
@@ -64,12 +74,12 @@ Proof.
   assert (U := PairUx A B x).
   destruct U as [U0 U1].
   assert (U2 := U0 H).
-  destruct U2.
+  destruct U2 as [I | I].
   +
-   rewrite H0.
+   rewrite I.
    apply pair_right.
   +
-   rewrite H0.
+   rewrite I.
    apply pair_left.
  -
   intro H.
