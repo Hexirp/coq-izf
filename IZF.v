@@ -107,6 +107,8 @@ Proof.
 Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
+Definition UnionUx (A : SET) := UniqueAx (IsUnion A) (UniqueUnion A).
+Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).

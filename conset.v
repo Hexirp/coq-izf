@@ -88,7 +88,7 @@ Qed.
 Theorem union_trans : forall (A B C : SET), In A B -> In B C -> In A (union C).
 Proof.
  intros A B C H I.
- assert (U := UniqueAx (IsUnion C) (UniqueUnion C) A).
+ assert (U := UnionUx C A).
  destruct U as [U0 U1].
  assert (exists x, In x C /\ In A x).
  -
@@ -141,7 +141,7 @@ Qed.
 Theorem union2_case : forall (A B : SET) x, In x (union2 A B) -> In x A \/ In x B.
 Proof.
  intros A B x H.
- assert (U := UniqueAx (IsUnion (pair A B)) (UniqueUnion (pair A B)) x).
+ assert (U := Union2Ux A B x).
  destruct U as [U0 U1].
  assert (U2 := U0 H).
  destruct U2 as [V0 V1].
