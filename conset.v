@@ -27,8 +27,9 @@ Proof.
  intros A B C P Q.
  unfold Sub.
  intros x H.
- unfold Sub in P, Q.
- apply Q, P, H.
+ apply Q.
+ apply P.
+ apply H.
 Qed.
 
 Theorem sub_empty : forall (A : SET), Sub empty A.
@@ -63,6 +64,14 @@ Proof.
  reflexivity.
 Qed.
 
+Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
+Proof.
+ intros A B x.
+ assert (U := PairUx A B x).
+ destruct U as [U0 U1].
+ apply U0.
+Qed.
+
 Theorem pair_sym : forall (A B : SET), pair A B = pair B A.
 Proof.
  intros A B.
@@ -71,27 +80,23 @@ Proof.
  split.
  -
   intro H.
-  assert (U := PairUx A B x).
-  destruct U as [U0 U1].
-  assert (U2 := U0 H).
-  destruct U2 as [I | I].
+  assert (U := pair_case A B x H).
+  destruct U as [U | U].
   +
-   rewrite I.
+   rewrite U.
    apply pair_right.
   +
-   rewrite I.
+   rewrite U.
    apply pair_left.
  -
   intro H.
-  assert (U := PairUx B A x).
-  destruct U as [U0 U1].
-  assert (U2 := U0 H).
-  destruct U2 as [I | I].
+  assert (U := pair_case B A x H).
+  destruct U as [U | U].
   +
-   rewrite I.
+   rewrite U.
    apply pair_right.
   +
-   rewrite I.
+   rewrite U.
    apply pair_left.
 Qed.
 
@@ -156,10 +161,8 @@ Proof.
  assert (U2 := U0 H).
  destruct U2 as [V0 V1].
  destruct V1 as [V1 V2].
- assert (W := PairUx A B V0).
- destruct W as [W0 W1].
- assert (W2 := W0 V1).
- destruct W2 as [I | I].
+ assert (W := pair_case A B V0 V1).
+ destruct W as [I | I].
  -
   left.
   rewrite <- I.
