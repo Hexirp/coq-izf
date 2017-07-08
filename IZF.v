@@ -282,6 +282,18 @@ Proof.
   apply U2.
 Qed.
 
+Theorem union_sub : forall (A B : SET), In A B -> Sub (union B) A.
+Proof.
+ intros A B H.
+ unfold Sub.
+ intros x I.
+ apply union_trans with A.
+ -
+  apply I.
+ -
+  apply H.
+Qed.
+
 Theorem union2_left : forall (A B : SET) x, In x A -> In x (union2 A B).
 Proof.
  intros A B x H.
