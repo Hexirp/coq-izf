@@ -365,3 +365,22 @@ Proof.
    apply union2_left.
    apply H.
 Qed.
+
+Theorem paradox : exists a, forall x, In x a.
+Proof.
+ exists (power empty).
+ intro x.
+ assert (U := UniqueAx (IsPower empty) (UniquePower empty) x).
+ assert (forall o, Sub o empty).
+ -
+  intro o.
+  unfold Sub.
+  intros p H.
+  assert (NH := UniqueAx IsEmpty UniqueEmpty p).
+  assert (Fal := NH H).
+  destruct Fal.
+ -
+  destruct U as [U0 U1].
+  assert (U2 := U1 (H x)).
+  apply U2.
+Qed.
