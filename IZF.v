@@ -9,7 +9,7 @@ Axiom SET : Type.
 Axiom In : SET -> SET -> Prop.
 
 (* 包含関係 *)
-Definition Sub (A : SET) (B : SET) := forall x, In x B -> In x A.
+Definition Sub (A : SET) (B : SET) := forall x, In x A -> In x B.
 
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
@@ -193,11 +193,9 @@ Proof.
  intro x.
  split.
  -
-  unfold Sub in Q.
-  apply Q.
- -
-  unfold Sub in P.
   apply P.
+ -
+  apply Q.
 Qed.
 
 Theorem sub_trans : forall (A B C : SET), Sub A B -> Sub B C -> Sub A C.
@@ -206,7 +204,7 @@ Proof.
  unfold Sub.
  intros x H.
  unfold Sub in P, Q.
- apply P, Q, H.
+ apply Q, P, H.
 Qed.
 
 Theorem pair_left : forall (A B : SET), In A (pair A B).
@@ -282,7 +280,7 @@ Proof.
   apply U2.
 Qed.
 
-Theorem union_sub : forall (A B : SET), In A B -> Sub (union B) A.
+Theorem union_sub : forall (A B : SET), In A B -> Sub A (union B).
 Proof.
  intros A B H.
  unfold Sub.
@@ -364,23 +362,4 @@ Proof.
   +
    apply union2_left.
    apply H.
-Qed.
-
-Theorem paradox : exists a, forall x, In x a.
-Proof.
- exists (power empty).
- intro x.
- assert (U := UniqueAx (IsPower empty) (UniquePower empty) x).
- assert (forall o, Sub o empty).
- -
-  intro o.
-  unfold Sub.
-  intros p H.
-  assert (NH := UniqueAx IsEmpty UniqueEmpty p).
-  assert (Fal := NH H).
-  destruct Fal.
- -
-  destruct U as [U0 U1].
-  assert (U2 := U1 (H x)).
-  apply U2.
 Qed.
