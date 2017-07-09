@@ -37,7 +37,7 @@ Proof.
  intros A.
  unfold Sub.
  intros x H.
- assert (NH := UniqueAx IsEmpty UniqueEmpty x).
+ assert (NH := EmptyUx x).
  assert (Fal := NH H).
  destruct Fal.
 Qed.

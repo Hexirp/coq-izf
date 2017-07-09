@@ -50,6 +50,8 @@ Proof.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.
+(* 空集合の単一性 *)
+Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
 
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
@@ -136,6 +138,7 @@ Proof.
    apply H1.
 Qed.
 Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
+Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
 
 (* 後者関数 *)
 Definition succ (A : SET) := union2 A (singleton A).
@@ -170,6 +173,7 @@ Proof.
    apply H1.
 Qed.
 Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
+Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep P A).
 
 (* 集合に対する帰納法の公理 *)
 Axiom IndAx : forall (P : SET -> Prop),
