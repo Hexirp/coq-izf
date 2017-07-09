@@ -179,7 +179,10 @@ Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep 
 Axiom IndAx : forall (P : SET -> Prop),
  (forall a, (forall x, In x a -> P x) -> P a) -> forall a, P a.
 
+(* 値域がIZFの宇宙である多価関数 *)
+Definition mf_u (P : SET -> SET -> Prop) (A : SET) := forall x, In x A -> exists y, P x y.
+(* 多価関数 *)
+Definition mf (P : SET -> SET -> Prop) (A : SET) (B : SET)
+ := forall x, In x A -> exists y, In y B /\ P x y.
 (* 収集公理 *)
-Axiom ColAx : forall (P : SET -> SET -> Prop),
- forall a, (forall x, In x a -> exists y, P x y)
-  -> exists b, forall x, In x a -> exists y, In y b /\ P x y.
+Axiom ColAx : forall (P : SET -> SET -> Prop) a, mf_u P a -> exists b, mf P a b.
