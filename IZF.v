@@ -3,6 +3,8 @@
  * https://plato.stanford.edu/entries/set-theory-constructive/axioms-CZF-IZF.html
  *)
 
+Require Import Init.
+
 (* 集合の型 *)
 Axiom SET : Type.
 (* 帰属関係の述語 *)
@@ -19,7 +21,7 @@ Axiom Uniqued : forall (P : SET -> Prop), Unique P -> SET.
 Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
 
 (* 外延性の公理 *)
-Axiom ExtenAx : forall a b, (forall x, iff (In x a) (In x b)) -> a = b.
+Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
 
 (* 空集合の公理 *)
 Axiom EmptyAx : exists e, forall x, not (In x e).
@@ -54,8 +56,8 @@ Definition empty := Uniqued IsEmpty UniqueEmpty.
 Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
 
 (* 対の公理 *)
-Axiom PairAx : forall a b, exists c, forall x, iff (In x c) (x = a \/ x = b).
-Definition IsPair (A : SET) (B : SET) (C : SET) := forall x, iff (In x C) (x = A \/ x = B).
+Axiom PairAx : forall a b, exists c, forall x, In x c <-> x = a \/ x = b.
+Definition IsPair (A : SET) (B : SET) (C : SET) := forall x, In x C <-> x = A \/ x = B.
 Theorem UniquePair : forall (A B : SET), Unique (IsPair A B).
 Proof.
  intros A B.
@@ -83,8 +85,8 @@ Definition singleton (A : SET) := pair A A.
 Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
 (* 和集合公理 *)
-Axiom UnionAx : forall a, exists b, forall x, iff (In x b) (exists u, In u a /\ In x u).
-Definition IsUnion (A : SET) (B : SET) := forall x, iff (In x B) (exists u, In u A /\ In x u).
+Axiom UnionAx : forall a, exists b, forall x, In x b <-> exists u, In u a /\ In x u.
+Definition IsUnion (A : SET) (B : SET) := forall x, In x B <-> exists u, In u A /\ In x u.
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
 Proof.
  intro A.
@@ -113,8 +115,8 @@ Definition UnionUx (A : SET) := UniqueAx (IsUnion A) (UniqueUnion A).
 Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 
 (* 冪集合公理 *)
-Axiom PowerAx : forall a, exists b, forall x, iff (In x b) (Sub x a).
-Definition IsPower (A : SET) (B : SET) := forall x, iff (In x B) (Sub x A).
+Axiom PowerAx : forall a, exists b, forall x, In x b <-> Sub x a.
+Definition IsPower (A : SET) (B : SET) := forall x, In x B <-> Sub x A.
 Theorem UniquePower : forall (A : SET), Unique (IsPower A).
 Proof.
  intro A.
@@ -147,9 +149,9 @@ Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
 Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
 
 (* 分出公理 *)
-Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, iff (In x s) (P x /\ In x a).
+Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, In x s <-> P x /\ In x a.
 Definition IsSep (P : SET -> Prop) (A : SET) (B : SET)
- := forall x, iff (In x B) (P x /\ In x A).
+ := forall x, In x B <-> P x /\ In x A.
 Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
 Proof.
  intros P A.
