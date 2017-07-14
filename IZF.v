@@ -36,19 +36,23 @@ Proof.
   unfold IsEmpty.
   apply EmptyAx.
  - (* 空集合の一意性 *)
-  intros A B H.
-  destruct H as [ H1 H2 ].
-  unfold IsEmpty in H1, H2.
+  intros x y H.
+  destruct H as [Hx Hy].
   apply ExtenAx.
+  intros z.
   split.
   + (* 右への含意 *)
-   intro H.
-   apply H1 in H as F.
-   destruct F.
+   intros H0.
+   apply False_ind.
+   unfold IsEmpty in Hx.
+   apply Hx with z.
+   apply H0.
   + (* 左への含意 *)
-   intro H.
-   apply H2 in H as F.
-   destruct F.
+   intros H0.
+   apply False_ind.
+   unfold IsEmpty in Hy.
+   apply Hy with z.
+   apply H0.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.
@@ -69,16 +73,17 @@ Proof.
  -
   intros x y H.
   apply ExtenAx.
-  intro x0.
-  destruct H as [ H1 H2 ].
-  unfold IsPair in H1, H2.
-  apply iff_stepl with (x0 = A \/ x0 = B).
+  intros z.
+  destruct H as [Hx Hy].
+  apply iff_stepl with (z = A \/ z = B).
   +
+   unfold IsPair in Hy.
    apply iff_sym.
-   apply H2.
+   apply Hy.
   +
+   unfold IsPair in Hx.
    apply iff_sym.
-   apply H1.
+   apply Hx.
 Qed.
 Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
@@ -89,7 +94,7 @@ Axiom UnionAx : forall a, exists b, forall x, In x b <-> exists u, In u a /\ In 
 Definition IsUnion (A : SET) (B : SET) := forall x, In x B <-> exists u, In u A /\ In x u.
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
 Proof.
- intro A.
+ intros A.
  unfold Unique.
  split.
  -
@@ -98,16 +103,17 @@ Proof.
  -
   intros x y H.
   apply ExtenAx.
-  intro x0.
-  destruct H as [ H1 H2 ].
-  unfold IsUnion in H1, H2.
-  apply iff_stepl with (exists u : SET, In u A /\ In x0 u).
+  intros z.
+  destruct H as [Hx Hy].
+  apply iff_stepl with (exists u : SET, In u A /\ In z u).
   +
+   unfold IsUnion in Hy.
    apply iff_sym.
-   apply H2.
+   apply Hy.
   +
+   unfold IsUnion in Hx.
    apply iff_sym.
-   apply H1.
+   apply Hx.
 Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
@@ -119,7 +125,7 @@ Axiom PowerAx : forall a, exists b, forall x, In x b <-> Sub x a.
 Definition IsPower (A : SET) (B : SET) := forall x, In x B <-> Sub x A.
 Theorem UniquePower : forall (A : SET), Unique (IsPower A).
 Proof.
- intro A.
+ intros A.
  unfold Unique.
  split.
  -
@@ -128,16 +134,17 @@ Proof.
  -
   intros x y H.
   apply ExtenAx.
-  intro x0.
-  destruct H as [ H1 H2 ].
-  unfold IsPower in H1, H2.
-  apply iff_stepl with (Sub x0 A).
+  intro z.
+  destruct H as [Hx Hy].
+  apply iff_stepl with (Sub z A).
   +
+   unfold IsPower in Hy.
    apply iff_sym.
-   apply H2.
+   apply Hy.
   +
+   unfold IsPower in Hx.
    apply iff_sym.
-   apply H1.
+   apply Hx.
 Qed.
 Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
 Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
@@ -163,16 +170,17 @@ Proof.
  -
   intros x y H.
   apply ExtenAx.
-  intro x0.
-  destruct H as [H1 H2].
-  unfold IsSep in H1, H2.
-  apply iff_stepl with (P x0 /\ In x0 A).
+  intro z.
+  destruct H as [Hx Hy].
+  apply iff_stepl with (P z /\ In z A).
   +
+   unfold IsSep in Hy.
    apply iff_sym.
-   apply H2.
+   apply Hy.
   +
+   unfold IsSep in Hx.
    apply iff_sym.
-   apply H1.
+   apply Hx.
 Qed.
 Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
 Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep P A).
