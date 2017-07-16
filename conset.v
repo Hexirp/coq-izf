@@ -4,9 +4,8 @@ Load IZF.
 
 Theorem sub_refl : forall (A : SET), Sub A A.
 Proof.
- intro A.
  unfold Sub.
- intros x H.
+ intros A x H.
  apply H.
 Qed.
 
@@ -14,29 +13,30 @@ Theorem sub_exten : forall (A B : SET), Sub A B -> Sub B A -> A = B.
 Proof.
  intros A B P Q.
  apply ExtenAx.
- intro x.
+ intros x.
  split.
  -
+  unfold Sub in P.
   apply P.
  -
+  unfold Sub in Q.
   apply Q.
 Qed.
 
-Theorem sub_trans : forall (A B C : SET), Sub A B -> Sub B C -> Sub A C.
+Theorem sub_trans : forall (A B C : SET), Sub A B -> Sub C A -> Sub C B.
 Proof.
- intros A B C P Q.
  unfold Sub.
- intros x H.
- apply Q.
+ intros A B C P Q x H.
  apply P.
+ apply Q.
  apply H.
 Qed.
 
 Theorem sub_empty : forall (A : SET), Sub empty A.
 Proof.
- intros A.
  unfold Sub.
- intros x H.
+ intros A x H.
+ unfold Sub.
  assert (NH := EmptyUx x).
  destruct NH as [NHl NHr].
  apply False_ind.
@@ -44,13 +44,28 @@ Proof.
  apply H.
 Qed.
 
+Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
+Proof.
+ unfold pair.
+ intros A B x.
+ assert (U := PairUx A B x).
+ destruct U as [U0 U1].
+ apply U0.
+Qed.
+
+Theorem pair_ind : forall (A B : SET) x, x = A \/ x = B -> In x (pair A B).
+Proof.
+ unfold pair.
+ intros A B x.
+ assert (U := PairUx A B x).
+ destruct U as [U0 U1].
+ apply U1.
+Qed.
+
 Theorem pair_left : forall (A B : SET), In A (pair A B).
 Proof.
  intros A B.
- unfold pair.
- assert (U := PairUx A B A).
- destruct U as [U0 U1].
- apply U1.
+ apply pair_ind.
  left.
  reflexivity.
 Qed.
@@ -58,48 +73,42 @@ Qed.
 Theorem pair_right : forall (A B : SET), In B (pair A B).
 Proof.
  intros A B.
- unfold pair.
- assert (U := PairUx A B B).
- destruct U as [U0 U1].
- apply U1.
+ apply pair_ind.
  right.
  reflexivity.
 Qed.
 
-Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
+Theorem or_sym : forall A B, A \/ B -> B \/ A.
 Proof.
- intros A B x.
- assert (U := PairUx A B x).
- destruct U as [U0 U1].
- apply U0.
+ intros A B H.
+ destruct H as [Hl | Hr].
+ -
+  right.
+  apply Hl.
+ -
+  left.
+  apply Hr.
+Qed.
+
+Lemma pair_sym_exten : forall A B x, In x (pair A B) -> In x (pair B A).
+Proof.
+ intros A B x H.
+ apply pair_ind.
+ apply or_sym.
+ apply pair_case.
+ apply H.
 Qed.
 
 Theorem pair_sym : forall (A B : SET), pair A B = pair B A.
 Proof.
  intros A B.
  apply ExtenAx.
- intro x.
+ intros x.
  split.
  -
-  intro H.
-  assert (U := pair_case A B x H).
-  destruct U as [U | U].
-  +
-   rewrite U.
-   apply pair_right.
-  +
-   rewrite U.
-   apply pair_left.
+  apply pair_sym_exten.
  -
-  intro H.
-  assert (U := pair_case B A x H).
-  destruct U as [U | U].
-  +
-   rewrite U.
-   apply pair_right.
-  +
-   rewrite U.
-   apply pair_left.
+  apply pair_sym_exten.
 Qed.
 
 Theorem union_trans : forall (A B C : SET), In A B -> In B C -> In A (union C).
