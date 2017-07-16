@@ -37,25 +37,30 @@ Proof.
  unfold Sub.
  intros A x H.
  apply False_ind.
- apply (comp_l (fun _ => False)) with (a := empty) (x := x).
- apply EmptyUx.
+ assert (U := EmptyUx x).
+ destruct U as [Ul Ur].
+ apply Ul.
  apply H.
 Qed.
 
 Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
 Proof.
  unfold pair.
- intros A B.
- apply comp_l.
- apply PairUx.
+ intros A B x H.
+ assert (U := PairUx A B x).
+ destruct U as [Ul Ur].
+ apply Ul.
+ apply H.
 Qed.
 
 Theorem pair_ind : forall (A B : SET) x, x = A \/ x = B -> In x (pair A B).
 Proof.
  unfold pair.
- intros A B.
- apply comp_r.
- apply PairUx.
+ intros A B x H.
+ assert (U := PairUx A B x).
+ destruct U as [Ul Ur].
+ apply Ur.
+ apply H.
 Qed.
 
 Theorem pair_left : forall (A B : SET), In A (pair A B).
@@ -113,25 +118,19 @@ Proof.
  intros A B C H I.
  assert (U := UnionUx C A).
  destruct U as [U0 U1].
- assert (exists x, In x C /\ In A x).
+ apply U1.
+ exists B.
+ split.
  -
-  exists B.
-  split.
-  +
-   apply I.
-  +
-   apply H.
+  apply I.
  -
-  assert (U2 := U1 H0).
-  unfold union.
-  apply U2.
+  apply H.
 Qed.
 
 Theorem union_sub : forall (A B : SET), In A B -> Sub A (union B).
 Proof.
- intros A B H.
  unfold Sub.
- intros x I.
+ intros A B H x I.
  apply union_trans with A.
  -
   apply I.
@@ -141,8 +140,8 @@ Qed.
 
 Theorem union2_left : forall (A B : SET) x, In x A -> In x (union2 A B).
 Proof.
- intros A B x H.
  unfold union2.
+ intros A B x H.
  apply union_trans with A.
  -
   apply H.
@@ -152,13 +151,25 @@ Qed.
 
 Theorem union2_right : forall (A B : SET) x, In x B -> In x (union2 A B).
 Proof.
- intros A B x H.
  unfold union2.
+ intros A B x H.
  apply union_trans with B.
  -
   apply H.
  -
   apply pair_right.
+Qed.
+
+Theorem union2_ind : forall (A B : SET) x, In x A \/ In x B -> In x (union2 A B).
+Proof.
+ intros A B x H.
+ destruct H as [Hl | Hr].
+ -
+  apply union2_left.
+  apply Hl.
+ -
+  apply union2_right.
+  apply Hr.
 Qed.
 
 Theorem union2_case : forall (A B : SET) x, In x (union2 A B) -> In x A \/ In x B.
@@ -181,6 +192,15 @@ Proof.
   apply V2.
 Qed.
 
+Lemma union2_sym_exten : forall A B x, In x (union2 A B) -> In x (union2 B A).
+Proof.
+ intros A B x H.
+ apply union2_ind.
+ apply or_sym.
+ apply union2_case.
+ apply H.
+Qed.
+
 Theorem union2_sym : forall (A B : SET), union2 A B = union2 B A.
 Proof.
  intros A B.
@@ -188,23 +208,7 @@ Proof.
  intro x.
  split.
  -
-  intro H.
-  apply union2_case in H.
-  destruct H as [H | H].
-  +
-   apply union2_right.
-   apply H.
-  +
-   apply union2_left.
-   apply H.
+  apply union2_sym_exten.
  -
-  intro H.
-  apply union2_case in H.
-  destruct H as [H | H].
-  +
-   apply union2_right.
-   apply H.
-  +
-   apply union2_left.
-   apply H.
+  apply union2_sym_exten.
 Qed.

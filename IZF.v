@@ -37,24 +37,6 @@ Proof.
   apply Ha.
 Qed.
 
-Lemma comp_l : forall p a, comp p a -> forall x, In x a -> p x.
-Proof.
- intros p a H x.
- unfold comp in H.
- assert (Hx := H x).
- destruct Hx as [Hl Hr].
- apply Hl.
-Qed.
-
-Lemma comp_r : forall p a, comp p a -> forall x, p x -> In x a.
-Proof.
- intros p a H x.
- unfold comp in H.
- assert (Hx := H x).
- destruct Hx as [Hl Hr].
- apply Hr.
-Qed.
-
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
 
