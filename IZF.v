@@ -23,17 +23,16 @@ Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
 
-(* 空集合の公理 *)
-Axiom EmptyAx : exists e, forall x, not (In x e).
 (* 空集合である *)
 Definition IsEmpty (A : SET) := forall x, not (In x A).
+(* 空集合の公理 *)
+Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
 Theorem UniqueEmpty : Unique IsEmpty.
 Proof.
  unfold Unique.
  split.
  - (* 空集合の存在性 *)
-  unfold IsEmpty.
   apply EmptyAx.
  - (* 空集合の一意性 *)
   intros x y H.
@@ -59,16 +58,15 @@ Definition empty := Uniqued IsEmpty UniqueEmpty.
 (* 空集合の単一性 *)
 Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
 
-(* 対の公理 *)
-Axiom PairAx : forall a b, exists c, forall x, In x c <-> x = a \/ x = b.
 Definition IsPair (A : SET) (B : SET) (C : SET) := forall x, In x C <-> x = A \/ x = B.
-Theorem UniquePair : forall (A B : SET), Unique (IsPair A B).
+(* 対の公理 *)
+Axiom PairAx : forall a b, exists c, IsPair a b c.
+Theorem UniquePair : forall (A : SET) (B : SET), Unique (IsPair A B).
 Proof.
  intros A B.
  unfold Unique.
  split.
  -
-  unfold IsPair.
   apply PairAx.
  -
   intros x y H.
@@ -89,16 +87,15 @@ Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
 Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
-(* 和集合公理 *)
-Axiom UnionAx : forall a, exists b, forall x, In x b <-> exists u, In u a /\ In x u.
 Definition IsUnion (A : SET) (B : SET) := forall x, In x B <-> exists u, In u A /\ In x u.
+(* 和集合公理 *)
+Axiom UnionAx : forall a, exists b, IsUnion a b.
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
 Proof.
  intros A.
  unfold Unique.
  split.
  -
-  unfold IsUnion.
   apply UnionAx.
  -
   intros x y H.
@@ -120,16 +117,16 @@ Definition union2 (A : SET) (B : SET) := union (pair A B).
 Definition UnionUx (A : SET) := UniqueAx (IsUnion A) (UniqueUnion A).
 Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 
-(* 冪集合公理 *)
-Axiom PowerAx : forall a, exists b, forall x, In x b <-> Sub x a.
+
 Definition IsPower (A : SET) (B : SET) := forall x, In x B <-> Sub x A.
+(* 冪集合公理 *)
+Axiom PowerAx : forall a, exists b, IsPower a b.
 Theorem UniquePower : forall (A : SET), Unique (IsPower A).
 Proof.
  intros A.
  unfold Unique.
  split.
  -
-  unfold IsPower.
   apply PowerAx.
  -
   intros x y H.
@@ -151,21 +148,19 @@ Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
 
 (* 後者関数 *)
 Definition succ (A : SET) := union2 A (singleton A).
-(* 無限公理 *)
-Axiom InfAx : exists o, In empty o /\ (forall n, In n o -> In (succ n) o).
 Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
+(* 無限公理 *)
+Axiom InfAx : exists a, IsInf a.
 
+Definition IsSep (P : SET -> Prop) (A : SET) (B : SET) := forall x, In x B <-> P x /\ In x A.
 (* 分出公理 *)
-Axiom SepAx : forall (P : SET -> Prop) a, exists s, forall x, In x s <-> P x /\ In x a.
-Definition IsSep (P : SET -> Prop) (A : SET) (B : SET)
- := forall x, In x B <-> P x /\ In x A.
+Axiom SepAx : forall p a, exists b, IsSep p a b.
 Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
 Proof.
  intros P A.
  unfold Unique.
  split.
  -
-  unfold IsSep.
   apply SepAx.
  -
   intros x y H.
