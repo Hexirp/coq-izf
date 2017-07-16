@@ -24,7 +24,7 @@ Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
 Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
 
 (* 空集合である *)
-Definition IsEmpty (A : SET) := forall x, not (In x A).
+Definition IsEmpty (A : SET) := forall x, In x A <-> False.
 (* 空集合の公理 *)
 Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
@@ -39,19 +39,15 @@ Proof.
   destruct H as [Hx Hy].
   apply ExtenAx.
   intros z.
-  split.
+  apply iff_stepl with False.
   + (* 右への含意 *)
-   intros H0.
-   apply False_ind.
-   unfold IsEmpty in Hx.
-   apply Hx with z.
-   apply H0.
-  + (* 左への含意 *)
-   intros H0.
-   apply False_ind.
    unfold IsEmpty in Hy.
-   apply Hy with z.
-   apply H0.
+   apply iff_sym.
+   apply Hy.
+  + (* 左への含意 *)
+   unfold IsEmpty in Hx.
+   apply iff_sym.
+   apply Hx.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.

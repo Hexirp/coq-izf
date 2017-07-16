@@ -38,8 +38,10 @@ Proof.
  unfold Sub.
  intros x H.
  assert (NH := EmptyUx x).
- assert (Fal := NH H).
- destruct Fal.
+ destruct NH as [NHl NHr].
+ apply False_ind.
+ apply NHl.
+ apply H.
 Qed.
 
 Theorem pair_left : forall (A B : SET), In A (pair A B).
