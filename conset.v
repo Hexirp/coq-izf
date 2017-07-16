@@ -36,30 +36,26 @@ Theorem sub_empty : forall (A : SET), Sub empty A.
 Proof.
  unfold Sub.
  intros A x H.
- unfold Sub.
- assert (NH := EmptyUx x).
- destruct NH as [NHl NHr].
  apply False_ind.
- apply NHl.
+ apply (comp_l (fun _ => False)) with (a := empty) (x := x).
+ apply EmptyUx.
  apply H.
 Qed.
 
 Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
 Proof.
  unfold pair.
- intros A B x.
- assert (U := PairUx A B x).
- destruct U as [U0 U1].
- apply U0.
+ intros A B.
+ apply comp_l.
+ apply PairUx.
 Qed.
 
 Theorem pair_ind : forall (A B : SET) x, x = A \/ x = B -> In x (pair A B).
 Proof.
  unfold pair.
- intros A B x.
- assert (U := PairUx A B x).
- destruct U as [U0 U1].
- apply U1.
+ intros A B.
+ apply comp_r.
+ apply PairUx.
 Qed.
 
 Theorem pair_left : forall (A B : SET), In A (pair A B).
@@ -113,6 +109,7 @@ Qed.
 
 Theorem union_trans : forall (A B C : SET), In A B -> In B C -> In A (union C).
 Proof.
+ unfold union.
  intros A B C H I.
  assert (U := UnionUx C A).
  destruct U as [U0 U1].
