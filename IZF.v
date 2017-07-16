@@ -23,8 +23,34 @@ Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
 (* 内包による集合の指定 *)
 Definition comp (P : SET -> Prop) (A : SET) := forall x, In x A <-> P x.
 
+Lemma comp_stepl : forall p a b, comp p a -> comp p b -> forall x, In x a <-> In x b.
+Proof.
+ intros p a b Ha Hb x.
+ apply iff_stepl with (p x).
+ -
+  unfold comp in Hb.
+  apply iff_sym.
+  apply Hb.
+ -
+  unfold comp in Ha.
+  apply iff_sym.
+  apply Ha.
+Qed.
+
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
+
+Lemma comp_unique : forall p a b, comp p a /\ comp p b -> a = b.
+Proof.
+ intros p a b H.
+ destruct H as [Ha Hb].
+ apply ExtenAx.
+ apply comp_stepl with p.
+ -
+  apply Ha.
+ -
+  apply Hb.
+Qed.
 
 (* 空集合である *)
 Definition IsEmpty := comp (fun _ => False).
@@ -38,21 +64,7 @@ Proof.
  - (* 空集合の存在性 *)
   apply EmptyAx.
  - (* 空集合の一意性 *)
-  intros x y H.
-  destruct H as [Hx Hy].
-  apply ExtenAx.
-  intros z.
-  apply iff_stepl with False.
-  + (* 右への含意 *)
-   unfold IsEmpty in Hy.
-   unfold comp in Hy.
-   apply iff_sym.
-   apply Hy.
-  + (* 左への含意 *)
-   unfold IsEmpty in Hx.
-   unfold comp in Hx.
-   apply iff_sym.
-   apply Hx.
+  apply comp_unique.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.
@@ -70,21 +82,7 @@ Proof.
  -
   apply PairAx.
  -
-  intros x y H.
-  apply ExtenAx.
-  intros z.
-  destruct H as [Hx Hy].
-  apply iff_stepl with (z = A \/ z = B).
-  +
-   unfold IsPair in Hy.
-   unfold comp in Hy.
-   apply iff_sym.
-   apply Hy.
-  +
-   unfold IsPair in Hx.
-   unfold comp in Hx.
-   apply iff_sym.
-   apply Hx.
+  apply comp_unique.
 Qed.
 Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
@@ -101,21 +99,7 @@ Proof.
  -
   apply UnionAx.
  -
-  intros x y H.
-  apply ExtenAx.
-  intros z.
-  destruct H as [Hx Hy].
-  apply iff_stepl with (exists u : SET, In u A /\ In z u).
-  +
-   unfold IsUnion in Hy.
-   unfold comp in Hy.
-   apply iff_sym.
-   apply Hy.
-  +
-   unfold IsUnion in Hx.
-   unfold comp in Hx.
-   apply iff_sym.
-   apply Hx.
+  apply comp_unique.
 Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
@@ -133,21 +117,7 @@ Proof.
  -
   apply PowerAx.
  -
-  intros x y H.
-  apply ExtenAx.
-  intro z.
-  destruct H as [Hx Hy].
-  apply iff_stepl with (Sub z A).
-  +
-   unfold IsPower in Hy.
-   unfold comp in Hy.
-   apply iff_sym.
-   apply Hy.
-  +
-   unfold IsPower in Hx.
-   unfold comp in Hx.
-   apply iff_sym.
-   apply Hx.
+  apply comp_unique.
 Qed.
 Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
 Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
@@ -169,21 +139,7 @@ Proof.
  -
   apply SepAx.
  -
-  intros x y H.
-  apply ExtenAx.
-  intro z.
-  destruct H as [Hx Hy].
-  apply iff_stepl with (P z /\ In z A).
-  +
-   unfold IsSep in Hy.
-   unfold comp in Hy.
-   apply iff_sym.
-   apply Hy.
-  +
-   unfold IsSep in Hx.
-   unfold comp in Hx.
-   apply iff_sym.
-   apply Hx.
+  apply comp_unique.
 Qed.
 Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
 Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep P A).
