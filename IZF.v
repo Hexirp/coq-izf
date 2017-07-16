@@ -40,7 +40,7 @@ Qed.
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
 
-Lemma comp_unique : forall p a b, comp p a /\ comp p b -> a = b.
+Lemma comp_exten : forall p a b, comp p a /\ comp p b -> a = b.
 Proof.
  intros p a b H.
  destruct H as [Ha Hb].
@@ -52,6 +52,17 @@ Proof.
   apply Hb.
 Qed.
 
+Lemma comp_unique : forall p, (exists a, comp p a) -> Unique (comp p).
+Proof.
+ intros p H.
+ unfold Unique.
+ split.
+ -
+  apply H.
+ -
+  apply comp_exten.
+Qed.
+
 (* 空集合である *)
 Definition IsEmpty := comp (fun _ => False).
 (* 空集合の公理 *)
@@ -59,12 +70,8 @@ Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
 Theorem UniqueEmpty : Unique IsEmpty.
 Proof.
- unfold Unique.
- split.
- - (* 空集合の存在性 *)
-  apply EmptyAx.
- - (* 空集合の一意性 *)
-  apply comp_unique.
+ apply comp_unique.
+ apply EmptyAx.
 Qed.
 (* 空集合 *)
 Definition empty := Uniqued IsEmpty UniqueEmpty.
@@ -77,12 +84,8 @@ Axiom PairAx : forall a b, exists c, IsPair a b c.
 Theorem UniquePair : forall (A : SET) (B : SET), Unique (IsPair A B).
 Proof.
  intros A B.
- unfold Unique.
- split.
- -
-  apply PairAx.
- -
-  apply comp_unique.
+ apply comp_unique.
+ apply PairAx.
 Qed.
 Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
@@ -94,12 +97,8 @@ Axiom UnionAx : forall a, exists b, IsUnion a b.
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
 Proof.
  intros A.
- unfold Unique.
- split.
- -
-  apply UnionAx.
- -
-  apply comp_unique.
+ apply comp_unique.
+ apply UnionAx.
 Qed.
 Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
@@ -112,12 +111,8 @@ Axiom PowerAx : forall a, exists b, IsPower a b.
 Theorem UniquePower : forall (A : SET), Unique (IsPower A).
 Proof.
  intros A.
- unfold Unique.
- split.
- -
-  apply PowerAx.
- -
-  apply comp_unique.
+ apply comp_unique.
+ apply PowerAx.
 Qed.
 Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
 Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
@@ -134,12 +129,8 @@ Axiom SepAx : forall p a, exists b, IsSep p a b.
 Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
 Proof.
  intros P A.
- unfold Unique.
- split.
- -
-  apply SepAx.
- -
-  apply comp_unique.
+ apply comp_unique.
+ apply SepAx.
 Qed.
 Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
 Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep P A).
