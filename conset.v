@@ -160,6 +160,20 @@ Proof.
   apply Hr.
 Qed.
 
+Lemma union2_case_eq : forall (A B C : SET) x, In x C -> C = A \/ C = B -> In x A \/ In x B.
+Proof.
+ intros A B C x H R.
+ destruct R as [RA | RB].
+ -
+  left.
+  rewrite <- RA.
+  apply H.
+ -
+  right.
+  rewrite <- RB.
+  apply H.
+Qed.
+
 Theorem union2_case : forall (A B : SET) x, In x (union2 A B) -> In x A \/ In x B.
 Proof.
  intros A B x H.
@@ -169,15 +183,11 @@ Proof.
  destruct U2 as [V0 V1].
  destruct V1 as [V1 V2].
  assert (W := pair_case A B V0 V1).
- destruct W as [I | I].
+ apply union2_case_eq with V0.
  -
-  left.
-  rewrite <- I.
   apply V2.
  -
-  right.
-  rewrite <- I.
-  apply V2.
+  apply W.
 Qed.
 
 Lemma union2_sym_exten : forall A B x, In x (union2 A B) -> In x (union2 B A).
