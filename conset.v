@@ -79,23 +79,11 @@ Proof.
  reflexivity.
 Qed.
 
-Theorem or_sym : forall A B, A \/ B -> B \/ A.
-Proof.
- intros A B H.
- destruct H as [Hl | Hr].
- -
-  right.
-  apply Hl.
- -
-  left.
-  apply Hr.
-Qed.
-
 Lemma pair_sym_exten : forall A B x, In x (pair A B) -> In x (pair B A).
 Proof.
  intros A B x H.
  apply pair_ind.
- apply or_sym.
+ apply or_comm.
  apply pair_case.
  apply H.
 Qed.
@@ -196,7 +184,7 @@ Lemma union2_sym_exten : forall A B x, In x (union2 A B) -> In x (union2 B A).
 Proof.
  intros A B x H.
  apply union2_ind.
- apply or_sym.
+ apply or_comm.
  apply union2_case.
  apply H.
 Qed.
