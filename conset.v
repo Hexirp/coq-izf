@@ -174,20 +174,39 @@ Proof.
   apply H.
 Qed.
 
+Lemma union2_case_pair : forall (A B C : SET) x, In x C -> In C (pair A B) -> In x A \/ In x B.
+Proof.
+ intros A B C x H P.
+ apply union2_case_eq with C.
+ -
+  apply H.
+ -
+  assert (U := PairUx A B C).
+  destruct U as [Ul Ur].
+  apply Ul.
+  apply P.
+Qed.
+
+Lemma union2_case_exists : forall (A B : SET) x, (exists C, In C (pair A B) /\ In x C) -> In x A \/ In x B.
+Proof.
+ intros A B x H.
+ destruct H as [C P].
+ destruct P as [PC Px].
+ apply union2_case_pair with C.
+ -
+  apply Px.
+ -
+  apply PC.
+Qed.
+
 Theorem union2_case : forall (A B : SET) x, In x (union2 A B) -> In x A \/ In x B.
 Proof.
  intros A B x H.
+ apply union2_case_exists.
  assert (U := Union2Ux A B x).
- destruct U as [U0 U1].
- assert (U2 := U0 H).
- destruct U2 as [V0 V1].
- destruct V1 as [V1 V2].
- assert (W := pair_case A B V0 V1).
- apply union2_case_eq with V0.
- -
-  apply V2.
- -
-  apply W.
+ destruct U as [Ul Ur].
+ apply Ul.
+ apply H.
 Qed.
 
 Lemma union2_sym_exten : forall A B x, In x (union2 A B) -> In x (union2 B A).
