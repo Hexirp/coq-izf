@@ -160,7 +160,7 @@ Proof.
   apply Hr.
 Qed.
 
-Lemma union2_case_eq : forall (A B C : SET) x, In x C -> C = A \/ C = B -> In x A \/ In x B.
+Lemma union2_case_eq : forall A B C x, In x C -> C = A \/ C = B -> In x A \/ In x B.
 Proof.
  intros A B C x H R.
  destruct R as [RA | RB].
@@ -174,7 +174,7 @@ Proof.
   apply H.
 Qed.
 
-Lemma union2_case_pair : forall (A B C : SET) x, In x C -> In C (pair A B) -> In x A \/ In x B.
+Lemma union2_case_pair : forall A B C x, In x C -> In C (pair A B) -> In x A \/ In x B.
 Proof.
  intros A B C x H P.
  apply union2_case_eq with C.
@@ -187,7 +187,8 @@ Proof.
   apply P.
 Qed.
 
-Lemma union2_case_exists : forall (A B : SET) x, (exists C, In C (pair A B) /\ In x C) -> In x A \/ In x B.
+Lemma union2_case_exists : forall A B x,
+ (exists C, In C (pair A B) /\ In x C) -> In x A \/ In x B.
 Proof.
  intros A B x H.
  destruct H as [C P].
@@ -222,10 +223,31 @@ Theorem union2_sym : forall (A B : SET), union2 A B = union2 B A.
 Proof.
  intros A B.
  apply ExtenAx.
- intro x.
+ intros x.
  split.
  -
   apply union2_sym_exten.
  -
   apply union2_sym_exten.
+Qed.
+
+Theorem union2_trans_exten : forall A B C x,
+ In x (union2 A (union2 B C)) -> In x (union2 (union2 A B) C).
+Proof.
+Admitted.
+
+Theorem union2_trans : forall (A B C : SET), union2 A (union2 B C) = union2 (union2 A B) C.
+Proof.
+ intros A B C.
+ apply ExtenAx.
+ intros x.
+ split.
+ -
+  apply union2_trans_exten.
+ -
+  rewrite (union2_sym (union2 A B) C).
+  rewrite (union2_sym A B).
+  rewrite (union2_sym A (union2 B C)).
+  rewrite (union2_sym B C).
+  apply union2_trans_exten.
 Qed.
