@@ -231,10 +231,31 @@ Proof.
   apply union2_sym_exten.
 Qed.
 
-Theorem union2_trans_exten : forall A B C x,
+Lemma union2_trans_exten : forall A B C x,
  In x (union2 A (union2 B C)) -> In x (union2 (union2 A B) C).
 Proof.
-Admitted.
+ intros A B C x H.
+ apply union2_ind.
+ assert (forall a b, In x a \/ In x b <-> In x (union2 a b)) as P.
+ -
+  intros a b.
+  split.
+  +
+   apply union2_ind.
+  +
+   apply union2_case.
+ -
+  assert (Q := or_iff_compat_r (In x C) (P A B)).
+  destruct Q as [Ql Qr].
+  apply Ql.
+  apply or_assoc.
+  assert (R := or_iff_compat_l (In x A) (P B C)).
+  destruct R as [Rl Rr].
+  apply Rr.
+  apply union2_case.
+  apply H.
+Qed.
+Print union2_trans_exten.
 
 Theorem union2_trans : forall (A B C : SET), union2 A (union2 B C) = union2 (union2 A B) C.
 Proof.
