@@ -1,6 +1,6 @@
 (* 集合を構築する定理 *)
 
-Load Axiom.
+Load axioms.
 
 Theorem sub_refl : forall (A : SET), Sub A A.
 Proof.
@@ -255,7 +255,6 @@ Proof.
   apply union2_case.
   apply H.
 Qed.
-Print union2_trans_exten.
 
 Theorem union2_trans : forall (A B C : SET), union2 A (union2 B C) = union2 (union2 A B) C.
 Proof.
@@ -271,4 +270,29 @@ Proof.
   rewrite (union2_sym A (union2 B C)).
   rewrite (union2_sym B C).
   apply union2_trans_exten.
+Qed.
+
+Theorem union2_empty : forall (A : SET), union2 empty A = A.
+Proof.
+ intros A.
+ apply ExtenAx.
+ intros x.
+ split.
+ -
+  intros H.
+  apply union2_case in H.
+  destruct H as [He | HA].
+  +
+   apply False_ind.
+   assert (U := EmptyUx x).
+   destruct U as [Ul Ur].
+   apply Ul.
+   apply He.
+  +
+   apply HA.
+ -
+  intros H.
+  apply union2_ind.
+  right.
+  apply H.
 Qed.
