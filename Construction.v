@@ -1,6 +1,6 @@
 (* 集合を構築する定理 *)
 
-Load IZF.
+Load Axiom.
 
 Theorem sub_refl : forall (A : SET), Sub A A.
 Proof.
