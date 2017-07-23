@@ -2,47 +2,33 @@
 
 Load axioms.
 
-Definition Natlike A x := x = empty \/ exists y, In y A /\ x = succ y.
-Definition IsNat (A : SET) := forall x, In x A <-> Natlike A x.
+Definition comp_r (P : SET -> Prop) (A : SET) := forall x, P x -> In x A.
 
-Theorem ExistsNat : exists x, IsNat x.
+Theorem comp_r_prom (P : SET -> Prop) : (exists a, comp_r P a) -> exists a, comp P a.
 Proof.
- destruct InfAx as [Inf Ax].
- exists (sep (Natlike Inf) Inf).
+ intros H.
+ destruct H as [Ha HH].
+ exists Ha.
+ unfold comp.
  intros x.
- assert (U := SepUx (Natlike Inf) Inf x).
- apply (iff_trans U).
  split.
  -
-  unfold Natlike.
-  intros H.
-  destruct H as [HN HI].
-  destruct HN as [O | S].
-  +
-   left.
-   apply O.
-  +
-   right.
-   destruct S as [S SH].
-   destruct SH as [SI Sx].
-   exists S.
-   split.
-   *
-    assert (V := SepUx (Natlike Inf) Inf S).
-    destruct V as [Vl Vr].
-    apply Vr.
-    split.
-    --
-     unfold Natlike.
-     right.
-    --
-     apply SI.
-   *
-    apply Sx.
+  assert (U := SepAx P Ha).
+  intros Q.
+  destruct U as [Ua UH].
+  unfold IsSep in UH.
+  unfold comp in UH.
+  assert (V := UH x).
+  destruct V as [Vl Vr].
+  apply proj1 with (In x Ha).
+  apply Vl.
+ -
+  intros Q.
+  unfold comp_r in HH.
+  apply (HH x).
+  
+ assert (U := SepAx P Ha).
+ destruct U as [Ua UH].
+ assert (Ux := UH x).
 
-Theorem UniqueNat : Unique IsNat.
-Proof.
- unfold Unique.
- split.
- -
-  apply ExistsNat.
+Definition IsNat (A : SET) := forall x, In x A <-> Natlike A x.
