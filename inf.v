@@ -46,26 +46,31 @@ Definition IsNat_r (A : SET) := comp_r InNat A.
 
 Definition IsNat (A : SET) := comp InNat A.
 
-Lemma inf_then_nat_r : forall A, IsInf A -> IsNat_r A.
+Lemma exists_nat : exists x, IsNat x.
 Proof.
- intros A H.
- unfold IsNat_r.
+ apply comp_r_prom.
+ destruct InfAx as [Inf Ax].
+ exists (sep InNat Inf).
  unfold comp_r.
- intros x.
- unfold InNat.
- unfold Natlike.
- intros R.
- destruct R as [Ro Rs].
- destruct H as [Ho Hs].
- destruct Ro as [Oo | Os].
+ intros x H.
+ assert (U := SepUx InNat Inf x).
+ destruct U as [Ul Ur].
+ apply Ur.
+ split.
  -
-  rewrite Oo.
-  apply Ho.
+  apply H.
  -
-  destruct Os as [OX OH].
-  destruct OH as [_ OH].
-  rewrite OH.
-  apply Hs.
+  unfold InNat in H.
+  destruct H as [Ho Hs].
+  unfold IsInf in Ax.
+  destruct Ax as [AxO AxS].
+  unfold Natlike in Ho.
+  destruct Ho as [O | S].
+  +
+   rewrite O.
+   apply AxO.
+  +
+   unfold Natlike in Hs.
 Admitted.
 
 Theorem UniqueNat : Unique IsNat.
