@@ -50,28 +50,26 @@ Lemma exists_nat : exists x, IsNat x.
 Proof.
  apply comp_r_prom.
  destruct InfAx as [Inf Ax].
- exists (sep InNat Inf).
+ exists Inf.
  unfold comp_r.
- intros x H.
- assert (U := SepUx InNat Inf x).
- destruct U as [Ul Ur].
- apply Ur.
- split.
+ apply IndAx.
  -
-  apply H.
- -
-  unfold InNat in H.
-  destruct H as [Ho Hs].
+  intros x H a R.
   unfold IsInf in Ax.
-  destruct Ax as [AxO AxS].
-  unfold Natlike in Ho.
-  destruct Ho as [O | S].
+  destruct Ax as [Axo Axs].
+  unfold InNat in R.
+  destruct R as [Ro Rs].
+  unfold Natlike in Ro.
+  destruct Ro as [Roo | Ros].
   +
-   rewrite O.
-   apply AxO.
+   rewrite Roo.
+   apply Axo.
   +
-   unfold Natlike in Hs.
-Admitted.
+   destruct Ros as [S Ros].
+   destruct Ros as [_ Ros].
+   apply H with (succ S).
+   *
+    unfold Natlike in Rs.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
