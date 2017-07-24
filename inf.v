@@ -52,9 +52,9 @@ Proof.
  destruct InfAx as [Inf Ax].
  exists Inf.
  unfold comp_r.
- apply IndAx.
+ apply (IndAx (fun x => InNat x -> In x Inf)).
  -
-  intros x H a R.
+  intros x H R.
   unfold IsInf in Ax.
   destruct Ax as [Axo Axs].
   unfold InNat in R.
@@ -67,9 +67,11 @@ Proof.
   +
    destruct Ros as [S Ros].
    destruct Ros as [_ Ros].
-   apply H with (succ S).
+   rewrite Ros.
+   apply Axs.
+   apply H.
    *
-    unfold Natlike in Rs.
+    rewrite Ros.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
