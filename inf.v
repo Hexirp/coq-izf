@@ -2,6 +2,7 @@
  *
  * 以下の文献を参考にした。
  * http://konn-san.com/math/set-theory-seminar/2012-10-30.pdf
+ * https://en.wikipedia.org/wiki/Axiom_of_infinity
  *)
 
 Load axioms.
@@ -37,43 +38,38 @@ Proof.
    apply H.
 Qed.
 
-Definition Natlike A x := x = empty \/ exists y, In y A /\ x = succ y.
+Definition Natlike P x := x = empty \/ exists y, P y /\ x = succ y.
 
-Definition IsInf' (A : SET) := forall x, Natlike A x -> In x A.
+Definition InNat x := Natlike (fun _ => True) x /\ forall y, Natlike (fun a => In a x) y.
 
-Lemma inf_then_inf : forall A, IsInf A -> IsInf' A.
+Definition IsNat_r (A : SET) := comp_r InNat A.
+
+Definition IsNat (A : SET) := comp InNat A.
+
+Lemma inf_then_nat_r : forall A, IsInf A -> IsNat_r A.
 Proof.
  intros A H.
- unfold IsInf'.
+ unfold IsNat_r.
+ unfold comp_r.
+ intros x.
+ unfold InNat.
  unfold Natlike.
- intros x R.
+ intros R.
+ destruct R as [Ro Rs].
  destruct H as [Ho Hs].
- destruct R as [Ro | Rs].
+ destruct Ro as [Oo | Os].
  -
-  rewrite Ro.
+  rewrite Oo.
   apply Ho.
  -
-  destruct Rs as [S Rs].
-  destruct Rs as [SA Rs].
-  rewrite Rs.
+  destruct Os as [OX OH].
+  destruct OH as [_ OH].
+  rewrite OH.
   apply Hs.
-  apply SA.
-Qed.
-
-Lemma exists_inf' : exists x, IsInf' x.
-Proof.
- destruct InfAx as [Inf Ax].
- exists Inf.
- apply inf_then_inf.
- apply Ax.
-Qed.
-
-Definition IsNat (A : SET) := forall x, In x A <-> Natlike A x.
+Admitted.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
  split.
  -
-  unfold IsNat.
-  destruct InfAx as [Inf Ax].
-  exists (sep
+  apply comp_r_prom.
