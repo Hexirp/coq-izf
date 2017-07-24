@@ -5,7 +5,7 @@
  * https://en.wikipedia.org/wiki/Axiom_of_infinity
  *)
 
-Load axioms.
+Load constructing.
 
 Definition comp_r (P : SET -> Prop) (A : SET) := forall x, P x -> In x A.
 
@@ -72,6 +72,34 @@ Proof.
    apply H.
    *
     rewrite Ros.
+    unfold succ.
+    apply union2_ind.
+    right.
+    apply pair_left.
+   *
+    unfold Natlike in Rs.
+    assert (Rs := Rs S).
+    unfold InNat.
+    split.
+    --
+     unfold Natlike.
+     destruct Rs as [Rso | Rss].
+     ++
+      left.
+      apply Rso.
+     ++
+      right.
+      destruct Rss as [RSS Rss].
+      destruct Rss as [_ Rss].
+      exists RSS.
+      split.
+      **
+       apply I.
+      **
+       apply Rss.
+    --
+     intros y.
+     unfold Natlike.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
