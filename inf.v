@@ -50,56 +50,76 @@ Lemma exists_nat : exists x, IsNat x.
 Proof.
  apply comp_r_prom.
  destruct InfAx as [Inf Ax].
- exists Inf.
+ exists (sep InNat Inf).
  unfold comp_r.
- apply (IndAx (fun x => InNat x -> In x Inf)).
- -
-  intros x H R.
-  unfold IsInf in Ax.
-  destruct Ax as [Axo Axs].
-  unfold InNat in R.
-  destruct R as [Ro Rs].
-  unfold Natlike in Ro.
-  destruct Ro as [Roo | Ros].
-  +
+ intros x R.
+ unfold IsInf in Ax.
+ destruct Ax as [Axo Axs].
+ unfold InNat in R.
+ destruct R as [Ro Rs].
+ unfold Natlike in Ro.
+ destruct Ro as [Roo | Ros].
+ +
+  assert (U := SepUx InNat Inf x).
+  destruct U as [Ul Ur].
+  apply Ur.
+  split.
+  -
+   unfold InNat.
+   split.
+   *
+    unfold Natlike.
+    left.
+    rewrite Roo.
+    apply eq_refl.
+   *
+    apply Rs.
+  -
    rewrite Roo.
    apply Axo.
-  +
-   destruct Ros as [S Ros].
-   destruct Ros as [_ Ros].
-   rewrite Ros.
+ +
+  assert (U := SepUx InNat Inf x).
+  destruct U as [Ul Ur].
+  apply Ur.
+  split.
+  -
+   unfold InNat.
+   split.
+   *
+    unfold Natlike.
+    right.
+    destruct Ros as [px Ros].
+    exists px.
+    apply Ros.
+   *
+    apply (IndAx (Natlike (fun a => In a x))).
+    intros a H.
+    apply Rs.
+  -
+   unfold Natlike in Rs.
+   generalize Rs.
+   generalize Ros.
+   generalize x.
+   clear Ur.
+   clear Ul.
+   clear Rs.
+   clear Ros.
+   clear x.
+   apply (IndAx (fun x0 => (exists y : SET, True /\ x0 = succ y) ->
+           (forall y : SET, Natlike (fun a : SET => In a x0) y) -> In x0 Inf)).
+   intros x H I J.
+   destruct I as [px I].
+   destruct I as [_ I].
+   rewrite I.
    apply Axs.
    apply H.
    *
-    rewrite Ros.
-    unfold succ.
+    rewrite I.
     apply union2_ind.
     right.
     apply pair_left.
    *
-    unfold Natlike in Rs.
-    assert (Rs := Rs S).
-    unfold InNat.
-    split.
-    --
-     unfold Natlike.
-     destruct Rs as [Rso | Rss].
-     ++
-      left.
-      apply Rso.
-     ++
-      right.
-      destruct Rss as [RSS Rss].
-      destruct Rss as [_ Rss].
-      exists RSS.
-      split.
-      **
-       apply I.
-      **
-       apply Rss.
-    --
-     intros y.
-     unfold Natlike.
+    unfold Natlike in J.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
