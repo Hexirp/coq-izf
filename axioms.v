@@ -1,5 +1,5 @@
 (* 以下の文献を参考にした。
- * http://shirodanuki.cs.shinshu-u.ac.jp/TPP/TPP2013_satou.pdf （間違いが多いので注意）
+ * http://shirodanuki.cs.shinshu-u.ac.jp/TPP/TPP2013_satou.pdf （誤字が多いので注意）
  * https://plato.stanford.edu/entries/set-theory-constructive/axioms-CZF-IZF.html
  *)
 
