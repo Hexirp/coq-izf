@@ -43,7 +43,7 @@ Proof.
  apply H.
 Qed.
 
-Theorem pair_case : forall (A B : SET) x, In x (pair A B) -> x = A \/ x = B.
+Theorem pair_case : forall (A B : SET) x, x :e pair A B -> x = A \/ x = B.
 Proof.
  unfold pair.
  intros A B x H.
@@ -53,7 +53,7 @@ Proof.
  apply H.
 Qed.
 
-Theorem pair_ind : forall (A B : SET) x, x = A \/ x = B -> In x (pair A B).
+Theorem pair_ind : forall (A B : SET) x, x = A \/ x = B -> x :e pair A B.
 Proof.
  unfold pair.
  intros A B x H.
@@ -63,7 +63,7 @@ Proof.
  apply H.
 Qed.
 
-Theorem pair_left : forall (A B : SET), In A (pair A B).
+Theorem pair_left : forall (A B : SET), A :e pair A B.
 Proof.
  intros A B.
  apply pair_ind.
@@ -71,7 +71,7 @@ Proof.
  reflexivity.
 Qed.
 
-Theorem pair_right : forall (A B : SET), In B (pair A B).
+Theorem pair_right : forall (A B : SET), B :e pair A B.
 Proof.
  intros A B.
  apply pair_ind.
@@ -79,7 +79,7 @@ Proof.
  reflexivity.
 Qed.
 
-Lemma pair_sym_exten : forall A B x, In x (pair A B) -> In x (pair B A).
+Lemma pair_sym_exten : forall A B x, x :e pair A B -> x :e pair B A.
 Proof.
  intros A B x H.
  apply pair_ind.
@@ -100,7 +100,7 @@ Proof.
   apply pair_sym_exten.
 Qed.
 
-Theorem union_trans : forall (A B C : SET), In A B -> In B C -> In A (union C).
+Theorem union_trans : forall (A B C : SET), A :e B -> B :e C -> A :e union C.
 Proof.
  unfold union.
  intros A B C H I.
@@ -115,7 +115,7 @@ Proof.
   apply H.
 Qed.
 
-Theorem union_sub : forall (A B : SET), In A B -> Sub A (union B).
+Theorem union_sub : forall (A B : SET), A :e B -> Sub A (union B).
 Proof.
  unfold Sub.
  intros A B H x I.
@@ -126,7 +126,7 @@ Proof.
   apply H.
 Qed.
 
-Theorem union2_left : forall (A B : SET) x, In x A -> In x (union2 A B).
+Theorem union2_left : forall (A B : SET) x, x :e A -> x :e union2 A B.
 Proof.
  unfold union2.
  intros A B x H.
@@ -137,7 +137,7 @@ Proof.
   apply pair_left.
 Qed.
 
-Theorem union2_right : forall (A B : SET) x, In x B -> In x (union2 A B).
+Theorem union2_right : forall (A B : SET) x, x :e B -> x :e union2 A B.
 Proof.
  unfold union2.
  intros A B x H.
@@ -148,7 +148,7 @@ Proof.
   apply pair_right.
 Qed.
 
-Theorem union2_ind : forall (A B : SET) x, In x A \/ In x B -> In x (union2 A B).
+Theorem union2_ind : forall (A B : SET) x, x :e A \/ x :e B -> x :e union2 A B.
 Proof.
  intros A B x H.
  destruct H as [Hl | Hr].
@@ -160,7 +160,7 @@ Proof.
   apply Hr.
 Qed.
 
-Lemma union2_case_eq : forall A B C x, In x C -> C = A \/ C = B -> In x A \/ In x B.
+Lemma union2_case_eq : forall A B C x, x :e C -> C = A \/ C = B -> x :e A \/ x :e B.
 Proof.
  intros A B C x H R.
  destruct R as [RA | RB].
@@ -174,7 +174,7 @@ Proof.
   apply H.
 Qed.
 
-Lemma union2_case_pair : forall A B C x, In x C -> In C (pair A B) -> In x A \/ In x B.
+Lemma union2_case_pair : forall A B C x, x :e C -> C :e pair A B -> x :e A \/ x :e B.
 Proof.
  intros A B C x H P.
  apply union2_case_eq with C.
@@ -188,7 +188,7 @@ Proof.
 Qed.
 
 Lemma union2_case_exists : forall A B x,
- (exists C, In C (pair A B) /\ In x C) -> In x A \/ In x B.
+ (exists C, C :e pair A B /\ x :e C) -> x :e A \/ x :e B.
 Proof.
  intros A B x H.
  destruct H as [C P].
@@ -200,7 +200,7 @@ Proof.
   apply PC.
 Qed.
 
-Theorem union2_case : forall (A B : SET) x, In x (union2 A B) -> In x A \/ In x B.
+Theorem union2_case : forall (A B : SET) x, x :e union2 A B -> x :e A \/ x :e B.
 Proof.
  intros A B x H.
  apply union2_case_exists.
@@ -210,7 +210,7 @@ Proof.
  apply H.
 Qed.
 
-Lemma union2_sym_exten : forall A B x, In x (union2 A B) -> In x (union2 B A).
+Lemma union2_sym_exten : forall A B x, x :e union2 A B -> x :e union2 B A.
 Proof.
  intros A B x H.
  apply union2_ind.
@@ -232,7 +232,7 @@ Proof.
 Qed.
 
 Lemma union2_trans_exten : forall A B C x,
- In x (union2 A (union2 B C)) -> In x (union2 (union2 A B) C).
+ x :e union2 A (union2 B C) -> x :e union2 (union2 A B) C.
 Proof.
  intros A B C x H.
  apply union2_ind.
@@ -245,11 +245,11 @@ Proof.
   +
    apply union2_case.
  -
-  assert (Q := or_iff_compat_r (In x C) (P A B)).
+  assert (Q := or_iff_compat_r (x :e C) (P A B)).
   destruct Q as [Ql Qr].
   apply Ql.
   apply or_assoc.
-  assert (R := or_iff_compat_l (In x A) (P B C)).
+  assert (R := or_iff_compat_l (x :e A) (P B C)).
   destruct R as [Rl Rr].
   apply Rr.
   apply union2_case.

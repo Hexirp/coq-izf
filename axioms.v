@@ -9,9 +9,11 @@ Require Import Init.
 Axiom SET : Type.
 (* 帰属関係の述語 *)
 Axiom In : SET -> SET -> Prop.
+(* 帰属関係の記法。∈の見立て。 *)
+Notation "x ':e' y" := (In x y) (at level 70).
 
 (* 包含関係 *)
-Definition Sub (A : SET) (B : SET) := forall x, In x A -> In x B.
+Definition Sub (A : SET) (B : SET) := forall x, x :e A -> x :e B.
 
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
@@ -21,9 +23,9 @@ Axiom Uniqued : forall (P : SET -> Prop), Unique P -> SET.
 Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
 
 (* 内包による集合の指定 *)
-Definition comp (P : SET -> Prop) (A : SET) := forall x, In x A <-> P x.
+Definition comp (P : SET -> Prop) (A : SET) := forall x, x :e A <-> P x.
 
-Lemma comp_stepl : forall p a b, comp p a -> comp p b -> forall x, In x a <-> In x b.
+Lemma comp_stepl : forall p a b, comp p a -> comp p b -> forall x, x :e a <-> x :e b.
 Proof.
  intros p a b Ha Hb x.
  apply iff_stepl with (p x).
@@ -38,7 +40,7 @@ Proof.
 Qed.
 
 (* 外延性の公理 *)
-Axiom ExtenAx : forall a b, (forall x, In x a <-> In x b) -> a = b.
+Axiom ExtenAx : forall a b, (forall x, x :e a <-> x :e b) -> a = b.
 
 Lemma comp_exten : forall p a b, comp p a /\ comp p b -> a = b.
 Proof.
@@ -91,7 +93,7 @@ Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
 Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
-Definition IsUnion (A : SET) := comp (fun x => exists u, In u A /\ In x u).
+Definition IsUnion (A : SET) := comp (fun x => exists u, u :e A /\ x :e u).
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, IsUnion a b.
 Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
@@ -119,11 +121,11 @@ Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
 
 (* 後者関数 *)
 Definition succ (A : SET) := union2 A (singleton A).
-Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> In (succ n) A).
+Definition IsInf (A : SET) := In empty A /\ (forall n, In n A -> succ n :e A).
 (* 無限公理 *)
 Axiom InfAx : exists a, IsInf a.
 
-Definition IsSep (P : SET -> Prop) (A : SET) := comp (fun x => P x /\ In x A).
+Definition IsSep (P : SET -> Prop) (A : SET) := comp (fun x => P x /\ x :e A).
 (* 分出公理 *)
 Axiom SepAx : forall p a, exists b, IsSep p a b.
 Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
@@ -137,12 +139,12 @@ Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep 
 
 (* 集合に対する帰納法の公理 *)
 Axiom IndAx : forall (P : SET -> Prop),
- (forall a, (forall x, In x a -> P x) -> P a) -> forall a, P a.
+ (forall a, (forall x, x :e a -> P x) -> P a) -> forall a, P a.
 
 (* 値域が宇宙である多価関数である *)
-Definition mf_u (P : SET -> SET -> Prop) (A : SET) := forall x, In x A -> exists y, P x y.
+Definition mf_u (P : SET -> SET -> Prop) (A : SET) := forall x, x :e A -> exists y, P x y.
 (* 値域が宇宙である多価関数のそれぞれの値を少なくとも一つ含む集合である *)
 Definition col (P : SET -> SET -> Prop) (A : SET) (B : SET)
- := forall x, In x A -> exists y, In y B /\ P x y.
+ := forall x, x :e A -> exists y, y :e B /\ P x y.
 (* 収集公理 *)
 Axiom ColAx : forall (P : SET -> SET -> Prop) a, mf_u P a -> exists b, col P a b.
