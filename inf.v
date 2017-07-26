@@ -96,30 +96,9 @@ Proof.
     intros a H.
     apply Rs.
   -
-   unfold Natlike in Rs.
-   generalize Rs.
-   generalize Ros.
-   generalize x.
-   clear Ur.
-   clear Ul.
-   clear Rs.
-   clear Ros.
-   clear x.
-   apply (IndAx (fun x0 => (exists y : SET, True /\ x0 = succ y) ->
-           (forall y : SET, Natlike (fun a : SET => In a x0) y) -> In x0 Inf)).
-   intros x H I J.
-   destruct I as [px I].
-   destruct I as [_ I].
-   rewrite I.
-   apply Axs.
-   apply H.
-   *
-    rewrite I.
-    apply union2_ind.
-    right.
-    apply pair_left.
-   *
-    unfold Natlike in J.
+   destruct Ros as [px Ros].
+   destruct Ros as [_ Ros].
+   rewrite Ros.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
