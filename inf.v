@@ -46,11 +46,18 @@ Definition IsNat_r (A : SET) := comp_r InNat A.
 
 Definition IsNat (A : SET) := comp InNat A.
 
+(*
+
+IsNatを満たす集合は存在することを示す。そのためにInNatが成り立つすべての集合を含む集合が存在することを示す。
+そのためにそれが無限公理により存在が保証される無限集合であることを示す。
+
+*)
+
 Lemma exists_nat : exists x, IsNat x.
 Proof.
  apply comp_r_prom.
  destruct InfAx as [Inf Ax].
- exists (sep InNat Inf).
+ exists Inf.
  unfold comp_r.
  intros x R.
  unfold IsInf in Ax.
@@ -60,45 +67,20 @@ Proof.
  unfold Natlike in Ro.
  destruct Ro as [Roo | Ros].
  +
-  assert (U := SepUx InNat Inf x).
-  destruct U as [Ul Ur].
-  apply Ur.
-  split.
-  -
-   unfold InNat.
-   split.
-   *
-    unfold Natlike.
-    left.
-    rewrite Roo.
-    apply eq_refl.
-   *
-    apply Rs.
-  -
-   rewrite Roo.
-   apply Axo.
+  rewrite Roo.
+  apply Axo.
  +
-  assert (U := SepUx InNat Inf x).
-  destruct U as [Ul Ur].
-  apply Ur.
-  split.
-  -
-   unfold InNat.
-   split.
-   *
-    unfold Natlike.
-    right.
-    destruct Ros as [px Ros].
-    exists px.
-    apply Ros.
-   *
-    apply (IndAx (Natlike (fun a => In a x))).
-    intros a H.
-    apply Rs.
-  -
-   destruct Ros as [px Ros].
-   destruct Ros as [_ Ros].
-   rewrite Ros.
+  destruct Ros as [px Ros].
+  destruct Ros as [_ Ros].
+  generalize Rs; clear Rs.
+  generalize Ros; clear Ros.
+  generalize px; clear px.
+  apply (IndAx (
+   fun px =>
+    x = succ px ->
+     (forall y : SET, Natlike (fun a : SET => a :e x) y) ->
+      x :e Inf)).
+  intros.
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
