@@ -2,14 +2,14 @@
 
 Load axioms.
 
-Theorem sub_refl : forall (A : SET), Sub A A.
+Theorem sub_refl : forall (A : SET), A c= A.
 Proof.
  unfold Sub.
  intros A x H.
  apply H.
 Qed.
 
-Theorem sub_exten : forall (A B : SET), Sub A B -> Sub B A -> A = B.
+Theorem sub_exten : forall (A B : SET), A c= B -> B c= A -> A = B.
 Proof.
  intros A B P Q.
  apply ExtenAx.
@@ -23,7 +23,7 @@ Proof.
   apply Q.
 Qed.
 
-Theorem sub_trans : forall (A B C : SET), Sub A B -> Sub C A -> Sub C B.
+Theorem sub_trans : forall (A B C : SET), A c= B -> C c= A -> Sub C B.
 Proof.
  unfold Sub.
  intros A B C P Q x H.
@@ -32,7 +32,7 @@ Proof.
  apply H.
 Qed.
 
-Theorem sub_empty : forall (A : SET), Sub empty A.
+Theorem sub_empty : forall (A : SET), empty c= A.
 Proof.
  unfold Sub.
  intros A x H.

@@ -14,6 +14,8 @@ Notation "x ':e' y" := (In x y) (at level 70).
 
 (* 包含関係 *)
 Definition Sub (A : SET) (B : SET) := forall x, x :e A -> x :e B.
+(* 包摂関係の記法。⊂の見立て。 *)
+Notation "x 'c=' y" := (Sub x y) (at level 70).
 
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
@@ -107,7 +109,7 @@ Definition union2 (A : SET) (B : SET) := union (pair A B).
 Definition UnionUx (A : SET) := UniqueAx (IsUnion A) (UniqueUnion A).
 Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 
-Definition IsPower (A : SET) := comp (fun x => Sub x A).
+Definition IsPower (A : SET) := comp (fun x => x c= A).
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, IsPower a b.
 Theorem UniquePower : forall (A : SET), Unique (IsPower A).
