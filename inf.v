@@ -42,11 +42,32 @@ Definition Natlike P x := x = empty \/ exists y, P y /\ x = succ y.
 
 Definition InNat x := Natlike (fun _ => True) x /\ forall y, Natlike (fun a => In a x) y.
 
-Definition IsNat_r (A : SET) := comp_r InNat A.
+Fixpoint nats (n : nat) : SET :=
+ match n with
+ | O => empty
+ | S n' => succ (nats n')
+ end.
+
+Lemma nats_in_nat : forall n, InNat (nats n).
+Proof.
+ intros n.
+ induction n.
+ -
+  unfold nats.
+  unfold InNat.
+  split.
+  +
+   unfold Natlike.
+   left.
+   reflexivity.
+  +
+   intros x.
+   unfold Natlike.
+   left.
 
 Definition IsNat (A : SET) := comp InNat A.
 
-Lemma exists_nat : exists x, IsNat x.
+Theorem exists_nat : exists x, IsNat x.
 Proof.
  apply comp_r_prom.
  destruct InfAx as [Inf Ax].
@@ -101,7 +122,6 @@ Proof.
     intros y Iy.
     unfold Natlike.
     unfold Natlike in Iy.
-    
 
 Theorem UniqueNat : Unique IsNat.
 Proof.
