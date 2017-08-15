@@ -38,15 +38,40 @@ Proof.
    apply H.
 Qed.
 
-Definition Natlike P x := x = empty \/ exists y, P y /\ x = succ y.
-
-Definition InNat x := Natlike (fun _ => True) x /\ forall y, Natlike (fun a => In a x) y.
+Definition InNat n
+ := (n = empty \/ exists k, n = succ k) /\ (forall m, m :e n -> exists k, k :e n /\m = succ k).
 
 Fixpoint nats (n : nat) : SET :=
  match n with
  | O => empty
  | S n' => succ (nats n')
  end.
+
+Lemma or_map_l : forall (A B C : Prop), (B -> C) -> A \/ B -> A \/ C.
+Proof.
+ intros A B C f x.
+ case x; auto.
+Qed.
+
+Lemma or_delta : forall A, A \/ A -> A.
+Proof.
+ intros A x.
+ case x; auto.
+Qed.
+
+Lemma succ_case : forall A x, x :e succ A -> x :e A \/ x = A.
+Proof.
+ intros A x H.
+ apply or_map_l with (x :e singleton A).
+ -
+  intros I.
+  apply or_delta.
+  apply pair_case.
+  apply I.
+ -
+  apply union2_case.
+  apply H.
+Qed.
 
 Lemma nats_in_nat : forall n, InNat (nats n).
 Proof.
@@ -57,13 +82,31 @@ Proof.
   unfold InNat.
   split.
   +
-   unfold Natlike.
    left.
    reflexivity.
   +
-   intros x.
-   unfold Natlike.
-   left.
+   intros m H.
+   assert (U := EmptyUx m).
+   destruct U as [Ul Ur].
+   apply False_ind.
+   apply Ul.
+   apply H.
+ -
+  unfold InNat.
+  split.
+  +
+   right.
+   exists (nats n).
+   reflexivity.
+  +
+   intros m H.
+   replace (nats (S n)) with (succ (nats n)) in H.
+   *
+    apply succ_case in H.
+    destruct H as [Hp | H].
+    --
+     destruct IHn as [IHnO IHnS].
+     
 
 Definition IsNat (A : SET) := comp InNat A.
 
