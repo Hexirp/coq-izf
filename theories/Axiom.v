@@ -3,7 +3,9 @@
  * https://plato.stanford.edu/entries/set-theory-constructive/axioms-CZF-IZF.html
  *)
 
-Require Import Init set.
+Require Import Init.
+
+Load Types.
 
 (* ある述語を満たす集合が一つのみである *)
 Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
