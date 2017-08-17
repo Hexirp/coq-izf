@@ -5,14 +5,7 @@
 
 Require Import Init.
 
-Load Types.
-
-(* ある述語を満たす集合が一つのみである *)
-Definition Unique (P : SET -> Prop) := (exists x, P x) /\ (forall x y, P x /\ P y -> x = y).
-(* Pを満たして一意に存在する集合 *)
-Axiom Uniqued : forall (P : SET -> Prop), Unique P -> SET.
-(* Uniquedの性質の公理 *)
-Axiom UniqueAx : forall (P : SET -> Prop) (U : Unique P), P (Uniqued P U).
+Load Uniqueness.
 
 (* 内包による集合の指定 *)
 Definition comp (P : SET -> Prop) (A : SET) := forall x, x :e A <-> P x.
