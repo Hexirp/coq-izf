@@ -5,24 +5,7 @@
 
 Require Import Init.
 
-Load Uniqueness.
-
-(* 内包による集合の指定 *)
-Definition comp (P : SET -> Prop) (A : SET) := forall x, x :e A <-> P x.
-
-Lemma comp_stepl : forall p a b, comp p a -> comp p b -> forall x, x :e a <-> x :e b.
-Proof.
- intros p a b Ha Hb x.
- apply iff_stepl with (p x).
- -
-  unfold comp in Hb.
-  apply iff_sym.
-  apply Hb.
- -
-  unfold comp in Ha.
-  apply iff_sym.
-  apply Ha.
-Qed.
+Require Import Types Uniqueness Comprehension.
 
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, x :e a <-> x :e b) -> a = b.
@@ -32,22 +15,25 @@ Proof.
  intros p a b H.
  destruct H as [Ha Hb].
  apply ExtenAx.
- apply comp_stepl with p.
+ apply comp_stepr with p.
  -
   apply Ha.
  -
   apply Hb.
 Qed.
 
-Lemma comp_unique : forall p, (exists a, comp p a) -> Unique (comp p).
+Lemma comp_unique : forall p, (exists a, comp p a) -> uniquant (comp p).
 Proof.
- intros p H.
- unfold Unique.
+ intros p pCompEx.
+ case pCompEx.
+ intros x xpComp.
  split.
  -
-  apply H.
+  exists x.
+  apply xpComp.
  -
-  apply comp_exten.
+  intros y y'.
+  apply (comp_exten p).
 Qed.
 
 (* 空集合である *)
@@ -55,39 +41,39 @@ Definition IsEmpty := comp (fun _ => False).
 (* 空集合の公理 *)
 Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
-Theorem UniqueEmpty : Unique IsEmpty.
+Theorem UniqueEmpty : uniquant IsEmpty.
 Proof.
  apply comp_unique.
  apply EmptyAx.
 Qed.
 (* 空集合 *)
-Definition empty := Uniqued IsEmpty UniqueEmpty.
+Definition empty := UniqueSet IsEmpty UniqueEmpty.
 (* 空集合の単一性 *)
 Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
 
 Definition IsPair (A : SET) (B : SET) := comp (fun x => x = A \/ x = B).
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, IsPair a b c.
-Theorem UniquePair : forall (A : SET) (B : SET), Unique (IsPair A B).
+Theorem UniquePair : forall (A : SET) (B : SET), uniquant (IsPair A B).
 Proof.
  intros A B.
  apply comp_unique.
  apply PairAx.
 Qed.
-Definition pair (A : SET) (B : SET) := Uniqued (IsPair A B) (UniquePair A B).
+Definition pair (A : SET) (B : SET) := UniqueSet (IsPair A B) (UniquePair A B).
 Definition singleton (A : SET) := pair A A.
 Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 
 Definition IsUnion (A : SET) := comp (fun x => exists u, u :e A /\ x :e u).
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, IsUnion a b.
-Theorem UniqueUnion : forall (A : SET), Unique (IsUnion A).
+Theorem UniqueUnion : forall (A : SET), uniquant (IsUnion A).
 Proof.
  intros A.
  apply comp_unique.
  apply UnionAx.
 Qed.
-Definition union (A : SET) := Uniqued (IsUnion A) (UniqueUnion A).
+Definition union (A : SET) := UniqueSet (IsUnion A) (UniqueUnion A).
 Definition union2 (A : SET) (B : SET) := union (pair A B).
 Definition UnionUx (A : SET) := UniqueAx (IsUnion A) (UniqueUnion A).
 Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
@@ -95,13 +81,13 @@ Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 Definition IsPower (A : SET) := comp (fun x => x c= A).
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, IsPower a b.
-Theorem UniquePower : forall (A : SET), Unique (IsPower A).
+Theorem UniquePower : forall (A : SET), uniquant (IsPower A).
 Proof.
  intros A.
  apply comp_unique.
  apply PowerAx.
 Qed.
-Definition power (A : SET) := Uniqued (IsPower A) (UniquePower A).
+Definition power (A : SET) := UniqueSet (IsPower A) (UniquePower A).
 Definition PowerUx (A : SET) := UniqueAx (IsPower A) (UniquePower A).
 
 (* 後者関数 *)
@@ -113,13 +99,13 @@ Axiom InfAx : exists a, IsInf a.
 Definition IsSep (P : SET -> Prop) (A : SET) := comp (fun x => P x /\ x :e A).
 (* 分出公理 *)
 Axiom SepAx : forall p a, exists b, IsSep p a b.
-Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), Unique (IsSep P A).
+Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), uniquant (IsSep P A).
 Proof.
  intros P A.
  apply comp_unique.
  apply SepAx.
 Qed.
-Definition sep (P : SET -> Prop) (A : SET) := Uniqued (IsSep P A) (UniqueSep P A).
+Definition sep (P : SET -> Prop) (A : SET) := UniqueSet (IsSep P A) (UniqueSep P A).
 Definition SepUx (P : SET -> Prop) (A : SET) := UniqueAx (IsSep P A) (UniqueSep P A).
 
 (* 集合に対する帰納法の公理 *)
