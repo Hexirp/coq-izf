@@ -7,7 +7,7 @@ Require Import Init.
 
 Require Import Types Uniqueness Comprehension Extensionality.
 
-Lemma comp_unique : forall p, (exists a, comp p a) -> uniquant (comp p).
+Lemma comp_unique : forall p, (exists a, comp p a) -> uniquant SET (comp p).
 Proof.
  intros p pCompEx.
  case pCompEx.
@@ -26,7 +26,7 @@ Definition IsEmpty := comp (fun _ => False).
 (* 空集合の公理 *)
 Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
-Theorem UniqueEmpty : uniquant IsEmpty.
+Theorem UniqueEmpty : uniquant SET IsEmpty.
 Proof.
  apply comp_unique.
  apply EmptyAx.
@@ -39,7 +39,7 @@ Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
 Definition IsPair (A : SET) (B : SET) := comp (fun x => x = A \/ x = B).
 (* 対の公理 *)
 Axiom PairAx : forall a b, exists c, IsPair a b c.
-Theorem UniquePair : forall (A : SET) (B : SET), uniquant (IsPair A B).
+Theorem UniquePair : forall (A : SET) (B : SET), uniquant SET (IsPair A B).
 Proof.
  intros A B.
  apply comp_unique.
@@ -52,7 +52,7 @@ Definition PairUx (A : SET) (B : SET) := UniqueAx (IsPair A B) (UniquePair A B).
 Definition IsUnion (A : SET) := comp (fun x => exists u, u :e A /\ x :e u).
 (* 和集合公理 *)
 Axiom UnionAx : forall a, exists b, IsUnion a b.
-Theorem UniqueUnion : forall (A : SET), uniquant (IsUnion A).
+Theorem UniqueUnion : forall (A : SET), uniquant SET (IsUnion A).
 Proof.
  intros A.
  apply comp_unique.
@@ -66,7 +66,7 @@ Definition Union2Ux (A : SET) (B : SET) := UnionUx (pair A B).
 Definition IsPower (A : SET) := comp (fun x => x c= A).
 (* 冪集合公理 *)
 Axiom PowerAx : forall a, exists b, IsPower a b.
-Theorem UniquePower : forall (A : SET), uniquant (IsPower A).
+Theorem UniquePower : forall (A : SET), uniquant SET (IsPower A).
 Proof.
  intros A.
  apply comp_unique.
@@ -84,7 +84,7 @@ Axiom InfAx : exists a, IsInf a.
 Definition IsSep (P : SET -> Prop) (A : SET) := comp (fun x => P x /\ x :e A).
 (* 分出公理 *)
 Axiom SepAx : forall p a, exists b, IsSep p a b.
-Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), uniquant (IsSep P A).
+Theorem UniqueSep : forall (P : SET -> Prop) (A : SET), uniquant SET (IsSep P A).
 Proof.
  intros P A.
  apply comp_unique.
