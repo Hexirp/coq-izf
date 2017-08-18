@@ -36,8 +36,12 @@ Proof.
  split.
  -
   intros axIn.
-  apply bpCompRight, apCompLeft, axIn.
+  apply bpCompRight.
+  apply apCompLeft.
+  apply axIn.
  -
   intros bxIn.
-  apply apCompRight, bpCompLeft, bxIn.
+  apply apCompRight.
+  apply bpCompLeft.
+  apply bxIn.
 Qed.

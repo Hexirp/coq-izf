@@ -61,7 +61,7 @@ Proof.
  -
   apply cbExten.
 Qed.
-(* 互いを内包する集合は外延である *)
+(* 互いに部分集合である二つの集合は外延である *)
 Theorem sub_exten (a b : SET) : a c= b -> b c= a -> exten a b.
 Proof.
  intros baSub abSub x.
