@@ -5,22 +5,7 @@
 
 Require Import Init.
 
-Require Import Types Uniqueness Comprehension.
-
-(* 外延性の公理 *)
-Axiom ExtenAx : forall a b, (forall x, x :e a <-> x :e b) -> a = b.
-
-Lemma comp_eq : forall p a b, comp p a /\ comp p b -> a = b.
-Proof.
- intros p a b H.
- destruct H as [Ha Hb].
- apply ExtenAx.
- apply comp_exten with p.
- -
-  apply Ha.
- -
-  apply Hb.
-Qed.
+Require Import Types Uniqueness Comprehension Extensionality.
 
 Lemma comp_unique : forall p, (exists a, comp p a) -> uniquant (comp p).
 Proof.
