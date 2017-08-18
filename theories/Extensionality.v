@@ -6,11 +6,9 @@ Require Import Types Uniqueness Comprehension.
 Axiom ExtenAx : forall a b, exten a b -> a = b.
 
 (* 内包は同値関係を定める *)
-Lemma comp_eq : forall p a b, comp p a /\ comp p b -> a = b.
+Lemma comp_eq : forall p a b, comp p a -> comp p b -> a = b.
 Proof.
- intros p a b abAnd.
- case abAnd.
- intros apComp bpComp.
+ intros p a b apComp bpComp.
  apply ExtenAx.
  apply comp_exten with p.
  -
