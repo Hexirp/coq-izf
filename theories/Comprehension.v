@@ -25,8 +25,8 @@ Proof.
  apply apCompRight, xp.
 Qed.
 
-(** 内包は集合に含まれる元を定める *)
-Lemma comp_stepr : forall p a b, comp p a -> comp p b -> forall x, x :e a <-> x :e b.
+(** 内包は外延を導く *)
+Lemma comp_stepr : forall p a b, comp p a -> comp p b -> exten a b.
 Proof.
  intros p a b apComp bpComp x.
  case (apComp x).
