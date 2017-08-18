@@ -10,12 +10,12 @@ Require Import Types Uniqueness Comprehension.
 (* 外延性の公理 *)
 Axiom ExtenAx : forall a b, (forall x, x :e a <-> x :e b) -> a = b.
 
-Lemma comp_exten : forall p a b, comp p a /\ comp p b -> a = b.
+Lemma comp_eq : forall p a b, comp p a /\ comp p b -> a = b.
 Proof.
  intros p a b H.
  destruct H as [Ha Hb].
  apply ExtenAx.
- apply comp_stepr with p.
+ apply comp_exten with p.
  -
   apply Ha.
  -
@@ -33,7 +33,7 @@ Proof.
   apply xpComp.
  -
   intros y y'.
-  apply (comp_exten p).
+  apply (comp_eq p).
 Qed.
 
 (* 空集合である *)

@@ -26,7 +26,7 @@ Proof.
 Qed.
 
 (** 内包は外延を導く *)
-Lemma comp_stepr : forall p a b, comp p a -> comp p b -> exten a b.
+Lemma comp_exten : forall p a b, comp p a -> comp p b -> exten a b.
 Proof.
  intros p a b apComp bpComp x.
  case (apComp x).
