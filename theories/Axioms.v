@@ -18,7 +18,7 @@ Proof.
   apply xpComp.
  -
   intros y y'.
-  apply (comp_eq p).
+  apply comp_eq.
 Qed.
 
 (* 空集合である *)

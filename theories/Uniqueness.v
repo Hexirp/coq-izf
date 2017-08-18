@@ -18,3 +18,11 @@ Qed.
 Axiom UniqueSet : forall (p : SET -> Prop), uniquant p -> SET.
 (** Uniquedの性質の公理 *)
 Axiom UniqueAx : forall (p : SET -> Prop) (h : uniquant p), p (UniqueSet p h).
+
+(** ただ一つのみ存在するということから集合の記述を得る。 *)
+Theorem set_description (p : SET -> Prop) : uniquant p -> { x : SET | p x }.
+Proof.
+ intros pUni.
+ exists (UniqueSet p pUni).
+ apply UniqueAx.
+Qed.
