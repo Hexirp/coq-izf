@@ -5,7 +5,7 @@
 
 Require Import Init.
 
-Require Import Types Uniqueness Comprehension Extensionality.
+Require Import Types Uniqueness Comprehension Extension.
 
 Lemma comp_unique : forall p, (exists a, comp p a) -> uniquant SET (comp p).
 Proof.
