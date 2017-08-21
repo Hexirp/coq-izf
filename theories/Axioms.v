@@ -5,12 +5,8 @@
 
 Require Import Init.
 
-Require Import Types Uniqueness Comprehension Extension UniExten.
+Require Import Types Uniqueness Comprehension Extension UniExten Empty.
 
-(* 空集合である *)
-Definition IsEmpty := comp (fun _ => False).
-(* 空集合の公理 *)
-Axiom EmptyAx : exists e, IsEmpty e.
 (* 空集合の一意存在性 *)
 Theorem UniqueEmpty : uniquant SET IsEmpty.
 Proof.
