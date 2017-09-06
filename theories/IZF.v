@@ -161,3 +161,34 @@ Module Uniqueness.
   simple apply UniqueAx.
  Qed.
 End Uniqueness.
+
+Module Extension.
+ Import Types Comprehension.
+
+ (* 外延性の公理。外延は集合の同値関係を定める。 *)
+ Axiom ExtenAx : forall a b, exten a b -> a = b.
+
+ (* 内包は同値関係を定める *)
+ Lemma comp_eq : forall p a b, comp p a -> comp p b -> a = b.
+ Proof.
+  intros p a b apComp bpComp.
+  simple apply ExtenAx.
+  simple apply comp_exten with p.
+  -
+   simple apply apComp.
+  -
+   simple apply bpComp.
+ Qed.
+
+ (* 互いに部分集合である二つの集合は等しい *)
+ Theorem sub_eq : forall a b, a c= b -> b c= a -> a = b.
+ Proof.
+  intros a b baSub abSub.
+  simple apply ExtenAx.
+  simple apply sub_exten.
+  -
+   simple apply baSub.
+  -
+   simple apply abSub.
+ Qed.
+End Extension.
