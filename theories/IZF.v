@@ -139,13 +139,7 @@ Module Uniqueness.
  Theorem uniquant_existence (A : Type) (p : A -> Prop)
   : uniquant A p <-> exists! x, p x.
  Proof.
-  unfold uniquant.
-  replace (forall x y : A, p x -> p y -> x = y) with (uniqueness p).
-  -
-   simple apply unique_existence.
-  -
-   unfold uniqueness.
-   simple apply eq_refl.
+  apply unique_existence.
  Qed.
 
  (** Pを満たして一意に存在する集合 *)
@@ -158,7 +152,7 @@ Module Uniqueness.
  Proof.
   intros pUni.
   exists (UniqueSet p pUni).
-  simple apply UniqueAx.
+  apply UniqueAx.
  Qed.
 End Uniqueness.
 
@@ -172,23 +166,41 @@ Module Extension.
  Lemma comp_eq : forall p a b, comp p a -> comp p b -> a = b.
  Proof.
   intros p a b apComp bpComp.
-  simple apply ExtenAx.
-  simple apply comp_exten with p.
+  apply ExtenAx.
+  apply comp_exten with p.
   -
-   simple apply apComp.
+   apply apComp.
   -
-   simple apply bpComp.
+   apply bpComp.
  Qed.
 
  (* 互いに部分集合である二つの集合は等しい *)
  Theorem sub_eq : forall a b, a c= b -> b c= a -> a = b.
  Proof.
   intros a b baSub abSub.
-  simple apply ExtenAx.
-  simple apply sub_exten.
+  apply ExtenAx.
+  apply sub_exten.
   -
-   simple apply baSub.
+   apply baSub.
   -
-   simple apply abSub.
+   apply abSub.
  Qed.
 End Extension.
+
+Module UniExten.
+ Import Types Uniqueness Comprehension Extension.
+
+ Lemma comp_unique : forall p, (exists a, comp p a) -> set_uniquant (comp p).
+ Proof.
+  intros p pCompEx.
+  case pCompEx.
+  intros x xpComp.
+  split.
+  -
+   exists x.
+   apply xpComp.
+  -
+   intros y y'.
+   apply comp_eq.
+ Qed.
+End UniExten.
