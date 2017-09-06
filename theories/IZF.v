@@ -204,3 +204,12 @@ Module UniExten.
    apply comp_eq.
  Qed.
 End UniExten.
+
+Module Empty.
+ Import Types Comprehension.
+
+ (* 空集合である *)
+ Definition IsEmpty := comp (fun _ => False).
+ (* 空集合の公理 *)
+ Axiom EmptyAx : exists e, IsEmpty e.
+End Empty.
