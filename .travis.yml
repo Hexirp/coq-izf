@@ -5,5 +5,13 @@ dist: trusty
 notifications:
   email: false
 
+addons:
+  apt:
+    packages:
+      - coq
+
+install:
+  - coqc -v
+
 script:
   - make
