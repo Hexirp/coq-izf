@@ -212,6 +212,14 @@ Module Empty.
  Definition IsEmpty := comp (fun _ => False).
  (* 空集合の公理 *)
  Axiom EmptyAx : exists e, IsEmpty e.
+
+ (* 空集合の使用 *)
+ Definition empty_apply : forall a : Prop, (forall x, IsEmpty x -> a) -> a.
+ Proof.
+  intros a p.
+  case EmptyAx.
+  apply p.
+ Qed.
 End Empty.
 
 Import Types Uniqueness Comprehension Extension UniExten Empty.
