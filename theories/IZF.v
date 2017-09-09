@@ -239,18 +239,22 @@ Module EmptyExten.
  Qed.
 End EmptyExten.
 
-Import Types Uniqueness Comprehension Extension UniExten Empty.
+Module EmptyUni.
+ Import Types Comprehension Uniqueness Extension UniExten Empty EmptyExten.
 
-(* 空集合の一意存在性 *)
-Theorem UniqueEmpty : uniquant SET IsEmpty.
-Proof.
- apply comp_unique.
- apply EmptyAx.
-Qed.
-(* 空集合 *)
-Definition empty := UniqueSet IsEmpty UniqueEmpty.
-(* 空集合の単一性 *)
-Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
+ (* 空集合の一意存在性 *)
+ Theorem UniqueEmpty : set_uniquant IsEmpty.
+ Proof.
+  apply comp_unique.
+  apply EmptyAx.
+ Qed.
+ (* 空集合 *)
+ Definition empty := UniqueSet IsEmpty UniqueEmpty.
+ (* 空集合の性質 *)
+ Definition EmptyUx := UniqueAx IsEmpty UniqueEmpty.
+End EmptyUni.
+
+Import Types Uniqueness Comprehension Extension UniExten Empty EmptyExten EmptyUni.
 
 Definition IsPair (A : SET) (B : SET) := comp (fun x => x = A \/ x = B).
 (* 対の公理 *)
