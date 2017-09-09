@@ -229,6 +229,16 @@ Module Empty.
  Qed.
 End Empty.
 
+Module EmptyExten.
+ Import Types Comprehension Extension Empty.
+ (* 空集合の同値性 *)
+ Theorem empty_eq : forall a b, IsEmpty a -> IsEmpty b -> a = b.
+ Proof.
+  intros a b.
+  apply comp_eq.
+ Qed.
+End EmptyExten.
+
 Import Types Uniqueness Comprehension Extension UniExten Empty.
 
 (* 空集合の一意存在性 *)
