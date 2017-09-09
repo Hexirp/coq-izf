@@ -214,11 +214,18 @@ Module Empty.
  Axiom EmptyAx : exists e, IsEmpty e.
 
  (* 空集合の使用 *)
- Definition empty_apply : forall a : Prop, (forall x, IsEmpty x -> a) -> a.
+ Theorem empty_apply : forall a : Prop, (forall x, IsEmpty x -> a) -> a.
  Proof.
   intros a p.
   case EmptyAx.
   apply p.
+ Qed.
+
+ (* 空集合の外延性 *)
+ Lemma empty_exten : forall a b, IsEmpty a -> IsEmpty b -> exten a b.
+ Proof.
+  intros a b.
+  apply comp_exten.
  Qed.
 End Empty.
 
