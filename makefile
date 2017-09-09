@@ -102,8 +102,8 @@ endif
 #                    #
 ######################
 
-VFILES:=*.vInf.v\
-  *.vIZF.v
+VFILES:=src/Inf.v\
+  src/IZF.v
 
 ifneq ($(filter-out archclean clean cleanall printenv,$(MAKECMDGOALS)),)
 -include $(addsuffix .d,$(VFILES))
