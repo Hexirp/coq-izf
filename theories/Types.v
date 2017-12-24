@@ -1,5 +1,7 @@
 Require Import Init.Prelude.
 
+Definition compose {A B C : Type} : (B -> C) -> (A -> B) -> A -> C := fun f g x => f (g x).
+
 (** 集合の型 *)
 Axiom set : Type.
 (** 帰属関係の述語 *)
@@ -24,21 +26,14 @@ Notation "x 'c/=' y" := (~ sub x y) (at level 70) : type_scope.
 Definition sub_refl (a : set) : a c= a := fun (x : set) => @idProp (x :e a).
 (* 推移律 *)
 Definition sub_trans (a b c : set) : b c= c -> a c= b -> a c= c
-  := fun f g => fun (x : set) (H : x :e a) => f x (g x H).
+  := fun f g (x : set) => compose (f x) (g x).
 
 (* 外延 *)
 Definition exten (a b : set) : Prop := forall x, x :e a <-> x :e b.
 Notation "x '~' y" := (exten x y) (at level 95, no associativity) : type_scope.
 (* 反射律 *)
-Definition exten_refl (a : set) : a ~ a := fun x => conj (fun i => i) (fun i => i).
+Definition exten_refl (a : set) : a ~ a := fun x => iff_refl (x :e a).
 (* 対称律 *)
-Definition exten_sym (a b : set) : a ~ b -> b ~ a :=
- fun H => fun x => match H x with
- | conj f g => conj g f
- end
-.
+Definition exten_sym (a b : set) : a ~ b -> b ~ a := fun H x => iff_sym (H x).
 (* 推移律 *)
-Definition exten_trans (a b c : set) : a ~ b -> b ~ c -> a ~ c.
-Proof.
- refine (fun H I => _).
- refine (fun x => (_, _)).
+Definition exten_trans (a b c : set) : a ~ b -> b ~ c -> a ~ c := fun H I x => iff_trans (H x) (I x).
