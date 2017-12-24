@@ -21,20 +21,20 @@ Definition sub (a b : set) : Prop := forall x, x :e a -> x :e b.
 Notation "x 'c=' y" := (sub x y) (at level 70) : type_scope.
 Notation "x 'c/=' y" := (~ sub x y) (at level 70) : type_scope.
 (* 反射律 *)
-Definition sub_refl (a : set) : a c= a := fun _ i => i.
+Definition sub_refl (a : set) : a c= a := fun (x : set) => @idProp (x :e a).
 (* 推移律 *)
-Definition sub_trans (a b c : set) : a c= b -> b c= c -> a c= c
-  := fun f g => fun x i => g x (f x i).
+Definition sub_trans (a b c : set) : b c= c -> a c= b -> a c= c
+  := fun f g => fun (x : set) (H : x :e a) => f x (g x H).
 
 (* 外延 *)
 Definition exten (a b : set) : Prop := forall x, x :e a <-> x :e b.
 Notation "x '~' y" := (exten x y) (at level 95, no associativity) : type_scope.
 (* 反射律 *)
-Definition exten_refl (a : set) : a ~ a := fun _ => (fun i => i, fun i => i).
+Definition exten_refl (a : set) : a ~ a := fun x => conj (fun i => i) (fun i => i).
 (* 対称律 *)
 Definition exten_sym (a b : set) : a ~ b -> b ~ a :=
  fun H => fun x => match H x with
- | (f, g) => (g, f)
+ | conj f g => conj g f
  end
 .
 (* 推移律 *)
