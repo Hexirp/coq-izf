@@ -37,3 +37,10 @@ Definition exten_refl (a : set) : a ~ a := fun x => iff_refl (x :e a).
 Definition exten_sym (a b : set) : a ~ b -> b ~ a := fun H x => iff_sym (H x).
 (* 推移律 *)
 Definition exten_trans (a b c : set) : a ~ b -> b ~ c -> a ~ c := fun H I x => iff_trans (H x) (I x).
+
+(* 互いに部分集合である二つの集合は外延である *)
+Definition sub_exten (a b : set) : a c= b -> b c= a -> a ~ b := fun H I x => conj (H x) (I x).
+(* 外延は包摂関係を導く（左） *)
+Definition exten_sub_l (a b : set) : a ~ b -> a c= b := fun H x => proj1 (H x).
+(* 外延は包摂関係を導く（右） *)
+Definition exten_sub_r (a b : set) : a ~ b -> b c= a := fun H x => proj2 (H x).
