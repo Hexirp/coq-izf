@@ -47,13 +47,13 @@ Definition exten_sub_l (a b : set) : a ~ b -> a c= b := fun H x => proj1 (H x).
 Definition exten_sub_r (a b : set) : a ~ b -> b c= a := fun H x => proj2 (H x).
 
 (* 弱い内包 *)
-Definition wcomp (P : set -> Prop) (a : set) := forall x, P x -> x :e a.
+Definition wcomp (P : set -> Prop) (a : set) : Prop := forall x, P x -> x :e a.
 Definition eq_sub_wcomp (a b : set) : a c= b = wcomp (fun x => x :e a) b := eq_refl.
 Definition sub_wcomp (p : set -> Prop) (a b : set) : a c= b -> wcomp p a -> wcomp p b
   := fun H I x => compose (H x) (I x).
 
 (* 内包 *)
-Definition comp (P : set -> Prop) (a : set) := forall x, P x <-> x :e a.
+Definition comp (P : set -> Prop) (a : set) : Prop := forall x, P x <-> x :e a.
 Definition eq_exten_comp (a b : set) : a ~ b = comp (fun x => x :e a) b := eq_refl.
 Definition comp_wcomp (p : set -> Prop) (a : set) : comp p a -> wcomp p a
   := fun H x => proj1 (H x).
@@ -61,3 +61,30 @@ Definition comp_exten (p : set -> Prop) (a b : set) : comp p a -> comp p b -> a 
   := fun H I x => iff_stepl (I x) (H x).
 Definition exten_comp (p : set -> Prop) (a b : set) : a ~ b -> comp p a -> comp p b
   := fun H I x => iff_trans (I x) (H x).
+
+(* 記述公理 *)
+Definition unique : Type := forall P : set -> Prop, (exists! x, P x) -> {x : set | P x}.
+
+(* 外延公理 *)
+Definition extension : Prop := forall a b, a ~ b -> a = b.
+
+Notation "'{{' x '|' p '}}'" := (ex (wcomp (fun x => p))) (at level 99, x ident).
+
+(* 空集合公理 *)
+Definition empty : Prop := {{x | False}}.
+
+(* 単集合公理 *)
+Definition singleton (a : set) : Prop := {{x | x = a}}.
+
+(* 和集合公理 *)
+Definition union (a : set) : Prop := {{x | x :e a}}.
+
+(* 冪集合公理 *)
+Definition power (a : set) : Prop := {{x | x c= a }}.
+
+(* 分出公理 *)
+Definition specification (P : set -> Prop) (a : set) : Prop := {{x | P x /\ x :e a}}.
+
+(* 帰納法公理 *)
+Definition set_ind (P : set -> Prop) : Prop
+  := (forall a, (forall x, x :e a -> P x) -> P a) -> forall a, P a.
