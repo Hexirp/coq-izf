@@ -3,7 +3,7 @@ Require Import Init.Prelude.
 (** 集合の型 *)
 Axiom set : Type.
 (** 帰属関係の述語 *)
-Axiom elem : set -> set -> Type.
+Axiom elem : set -> set -> Prop.
 (** 帰属関係の記法。∈の見立て。 *)
 Notation "x ':e' y" := (elem x y) (at level 70) : type_scope.
 (** 帰属関係の否定。∉の見立て。 *)
@@ -16,7 +16,7 @@ Notation "'exists' x ':e' a ',' p"
   := (sigT set (fun x => x :e a * p)) (at level 199, x ident, right associativity) : type_scope.
 
 (* 包含関係 *)
-Definition sub (a b : set) : Type := forall x, x :e a -> x :e b.
+Definition sub (a b : set) : Prop := forall x, x :e a -> x :e b.
 (* 包摂関係の記法。⊂の見立て。 *)
 Notation "x 'c=' y" := (sub x y) (at level 70) : type_scope.
 Notation "x 'c/=' y" := (~ sub x y) (at level 70) : type_scope.
@@ -27,7 +27,7 @@ Definition sub_trans (a b c : set) : a c= b -> b c= c -> a c= c
   := fun f g => fun x i => g x (f x i).
 
 (* 外延 *)
-Definition exten (a b : set) : Type := forall x, (x :e a -> x :e b) * (x :e b -> x :e a).
+Definition exten (a b : set) : Prop := forall x, x :e a <-> x :e b.
 Notation "x '~' y" := (exten x y) (at level 95, no associativity) : type_scope.
 (* 反射律 *)
 Definition exten_refl (a : set) : a ~ a := fun _ => (fun i => i, fun i => i).
