@@ -30,13 +30,14 @@ Definition sub_trans (a b c : set) : b c= c -> a c= b -> a c= c
 
 (* 外延 *)
 Definition exten (a b : set) : Prop := forall x, x :e a <-> x :e b.
-Notation "x '~' y" := (exten x y) (at level 95, no associativity) : type_scope.
+Notation "x '~' y" := (exten x y) (at level 70, no associativity) : type_scope.
 (* 反射律 *)
 Definition exten_refl (a : set) : a ~ a := fun x => iff_refl (x :e a).
 (* 対称律 *)
 Definition exten_sym (a b : set) : a ~ b -> b ~ a := fun H x => iff_sym (H x).
 (* 推移律 *)
-Definition exten_trans (a b c : set) : a ~ b -> b ~ c -> a ~ c := fun H I x => iff_trans (H x) (I x).
+Definition exten_trans (a b c : set) : a ~ b -> b ~ c -> a ~ c
+  := fun H I x => iff_trans (H x) (I x).
 
 (* 互いに部分集合である二つの集合は外延である *)
 Definition sub_exten (a b : set) : a c= b -> b c= a -> a ~ b := fun H I x => conj (H x) (I x).
@@ -47,5 +48,16 @@ Definition exten_sub_r (a b : set) : a ~ b -> b c= a := fun H x => proj2 (H x).
 
 (* 弱い内包 *)
 Definition wcomp (P : set -> Prop) (a : set) := forall x, P x -> x :e a.
-Notation "x '<e' p" := (wcomp p x) (at level 70) : type_scope.
-Definition sub_wcomp (a b : set) : (a c= b) = (wcomp (fun x => x :e a) b) := eq_refl.
+Definition eq_sub_wcomp (a b : set) : a c= b = wcomp (fun x => x :e a) b := eq_refl.
+Definition sub_wcomp (p : set -> Prop) (a b : set) : a c= b -> wcomp p a -> wcomp p b
+  := fun H I x => compose (H x) (I x).
+
+(* 内包 *)
+Definition comp (P : set -> Prop) (a : set) := forall x, P x <-> x :e a.
+Definition eq_exten_comp (a b : set) : a ~ b = comp (fun x => x :e a) b := eq_refl.
+Definition comp_wcomp (p : set -> Prop) (a : set) : comp p a -> wcomp p a
+  := fun H x => proj1 (H x).
+Definition comp_exten (p : set -> Prop) (a b : set) : comp p a -> comp p b -> a ~ b
+  := fun H I x => iff_stepl (I x) (H x).
+Definition exten_comp (p : set -> Prop) (a b : set) : a ~ b -> comp p a -> comp p b
+  := fun H I x => iff_trans (I x) (H x).
