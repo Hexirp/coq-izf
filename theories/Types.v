@@ -71,7 +71,7 @@ Definition extension : Prop := forall a b, a ~ b -> a = b.
 Notation "'{{' x '|' p '}}'" := (ex (wcomp (fun x => p))) (at level 99, x ident).
 
 (* 空集合公理 *)
-Definition empty : Prop := {{x | False}}.
+Definition empty : Prop := {{_ | False}}.
 
 (* 単集合公理 *)
 Definition singleton (a : set) : Prop := {{x | x = a}}.
@@ -88,3 +88,17 @@ Definition specification (P : set -> Prop) (a : set) : Prop := {{x | P x /\ x :e
 (* 帰納法公理 *)
 Definition set_ind (P : set -> Prop) : Prop
   := (forall a, (forall x, x :e a -> P x) -> P a) -> forall a, P a.
+
+Definition universe (A : forall P, set_ind P) : ~ {{_ | True}}.
+Proof.
+ intros H.
+ case H.
+ apply (A (fun x : set => wcomp (fun _ : set => True) x -> False)).
+ intros Hx IHx HH.
+ apply (IHx Hx).
+ -
+  apply HH.
+  apply I.
+ -
+  apply HH.
+Defined.
