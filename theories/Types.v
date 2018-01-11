@@ -77,7 +77,7 @@ Definition empty : Prop := {{_ | False}}.
 Definition singleton (a : set) : Prop := {{x | x = a}}.
 
 (* 和集合公理 *)
-Definition union (a : set) : Prop := {{x | x :e a}}.
+Definition union (a : set) : Prop := {{x | exists ap, ap :e a /\ x :e ap}}.
 
 (* 冪集合公理 *)
 Definition power (a : set) : Prop := {{x | x c= a }}.
